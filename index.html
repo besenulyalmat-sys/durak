@@ -153,6 +153,7 @@ body.chaos::before{content:'';position:fixed;inset:0;pointer-events:none;box-sha
 .pill{color:var(--bt,#f6e7bd)}body.th2 .pill,body.th3 .pill{background:var(--fg);color:var(--bg)}
 .flashov{position:absolute;inset:0;background:#fff;opacity:0;animation:fo .4s ease-out;pointer-events:none}@keyframes fo{0%{opacity:.85}100%{opacity:0}}
 .themes{display:flex;gap:6px;margin:6px 0 12px;flex-wrap:wrap}.themes button{padding:6px 10px;border:2px solid var(--line);border-radius:10px;background:var(--card);color:var(--fg);cursor:pointer;font-family:inherit;font-size:13px}.themes button.on{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
+.kick{margin-left:6px;border:2px solid var(--line);background:var(--card);color:var(--red);border-radius:8px;font-size:12px;padding:0 6px;cursor:pointer;line-height:18px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Oswald:wght@400;600&display=swap" rel="stylesheet">
 </head>
@@ -193,7 +194,7 @@ let S=null,lastG=null,selSu=4,seenFx=-1,curGid=0,sel=null,selS=[],myIdx=-1,wasMy
 const MAXP=8,PREF='rzkdurak-';
 const TV={dr:['💨','🗑️'],gv:['✉️','🃏'],ga:['🎁','🎁'],pn:['🃏','⬇️'],pa:['🃏','☠️'],bo:['🔥','💥'],ba:['🔥','☄️'],b2:['💥','🔥'],pm:['🃏','🃏'],cd:['🔋','💨'],c2:['🔋','⚡'],ca:['🔋','☠️'],fz:['⛓️','🔒'],sk:['⏩','⏱️'],rv:['🔄','🌀'],sw:['🔀','🤝'],tr:['👑','🌈'],lk:['❄️','🔇'],ch:['⚡','🔋'],wd:['🛡️','⚔️'],rf:['🪞','↩️'],cap:['🚧','🔢'],ban:['🚫','🎯'],wk:['📉','💧'],st:['📈','✨'],lt:['🎲','🃏'],cr:['🎠','🔄'],eq:['⚖️','🃏'],gm:['🎰','🍀'],xc:['🤝','💱'],rev:['👁️','🔍'],pk:['🔮','✨'],sh:['🛡️','💠'],gy:['⚰️','👻'],ec:['🔁','📣']};
 const MV={dr:'u',gv:'s',ga:'s',pn:'d',pa:'d',bo:'u',ba:'u',b2:'u',pm:'d',cd:'d',c2:'d',ca:'d',fz:'d',sk:'s',rv:'r',sw:'s',tr:'u',lk:'d',ch:'u',wd:'r',rf:'s',cap:'d',ban:'d',wk:'d',st:'u',lt:'s',cr:'r',eq:'r',gm:'u',xc:'s',rev:'r',pk:'u',sh:'r',gy:'d',ec:'r'};
-const cl=()=>location.hash.slice(1).toLowerCase().replace(/[^a-z0-9]/g,'');
+const cl=()=>{const h=location.hash.slice(1);return h.startsWith('owner=')?'':h.toLowerCase().replace(/[^a-z0-9]/g,'')};
 const link=()=>location.href.split('#')[0]+'#'+code;
 const getName=()=>{const n=document.getElementById('nm');return n?n.value.trim().slice(0,16):myName};
 const su=c=>Math.floor((c%52)/13),rk=c=>(c%52)%13;
@@ -300,8 +301,8 @@ function openHost(first){peer=new Peer(PREF+code);setupCalls();
  peer.on('error',e=>{if(e.type==='unavailable-id'){if(first){err='Этот код уже занят, попробуй ещё раз.';home()}else if(retry++<15){try{peer.destroy()}catch(x){}setTimeout(()=>openHost(false),3000)}else{err='Не удалось взять комнату на себя.';home()}}else if(first){err='Ошибка сети: '+e.type;home()}});
  peer.on('connection',c=>{c.on('data',d=>hostMsg(c,d));c.on('close',()=>drop(c));c.on('error',()=>drop(c))})}
 function hostMsg(c,d){if(!d)return;
- if(d.t==='hello'){let e=LB.find(x=>x.c===c);if(!e){e={c,name:String(d.name||'Игрок').slice(0,16),uid:String(d.uid||''),idx:-1};
-   if(S){const i=S.uid.indexOf(e.uid);if(i>=0&&!S.lv.includes(i)){e.idx=i;S.off=S.off.filter(x=>x!==i)}}LB.push(e)}
+ if(d.t==='hello'){if(BAN.has(String(d.uid||''))){try{c.send({t:'kicked'})}catch(e){}setTimeout(()=>{try{c.close()}catch(e){}},150);return}let e=LB.find(x=>x.c===c);if(!e){e={c,name:String(d.name||'Игрок').slice(0,16),uid:String(d.uid||''),idx:-1};
+   if(S){const i=S.uid.indexOf(e.uid);if(i>=0&&!S.lv.includes(i)){e.idx=i;S.off=S.off.filter(x=>x!==i)}}const dq=LB.findIndex(x=>x.uid&&x.uid===e.uid&&x.c&&x.c!==c);if(dq>=0){try{LB[dq].c.close()}catch(x){}LB.splice(dq,1)}LB.push(e)}
   bLobby();bPl();if(S)pub();else draw(null)}
  else if(d.t==='mv'&&S){const e=LB.find(x=>x.c===c);if(e&&e.idx>=0)apply(e.idx,d.m)}
  else if(d.t==='chat'||d.t==='emo'){const e=LB.find(x=>x.c===c);if(e)bcast({t:'msg',n:e.name,x:d.x?String(d.x).slice(0,120):'',e:d.e?String(d.e).slice(0,4):''})}}
@@ -318,12 +319,12 @@ function joinGame(){peer=new Peer();setupCalls();
 function connectHost(){hostConn=peer.connect(PREF+code,{reliable:true});
  hostConn.on('open',()=>{everConn=true;retry=0;banner('');$e('chatbox').style.display='block';hostConn.send({t:'hello',name:myName,uid})});
  hostConn.on('data',guestMsg);hostConn.on('close',lost);hostConn.on('error',lost)}
-function retryConnect(){if(retry++<30){banner('Переподключаюсь… ('+retry+')');setTimeout(()=>{if(!isHost)connectHost()},3000)}else{banner('');err='Связь с хостом потеряна.';home()}}
-function lost(){if(isHost||lostFlag)return;lostFlag=true;setTimeout(()=>{lostFlag=false},600);
+function retryConnect(){if(retry++<30){banner('Переподключаюсь… ('+retry+')');setTimeout(()=>{if(!isHost&&!kickedFlag)connectHost()},3000)}else{banner('');err='Связь с хостом потеряна.';home()}}
+function lost(){if(isHost||lostFlag||kickedFlag)return;lostFlag=true;setTimeout(()=>{lostFlag=false},600);
  if(isBackup&&snap){banner('Хост пропал: беру комнату на себя…');setTimeout(()=>{try{peer.destroy()}catch(e){}openHost(false)},1500)}else retryConnect()}
-function guestMsg(d){if(!d)return;banner('');if(d.t==='lobby'){LN=d.names;if(!lastG)draw(null)}else if(d.t==='view')render(d.g);else if(d.t==='snap'){snap=d.S;isBackup=true}else if(d.t==='pl'){plist=d.ids;voiceSync()}else if(d.t==='msg')onMsg(d)}
-function create(){myName=getName();if(!myName){err='Введи имя.';return home()}code=Math.random().toString(36).slice(2,7);err='Создаю комнату…';home();history.replaceState(null,'','#'+code);openHost(true)}
-function join(){myName=getName();code=cl();if(!myName||!code){err='Нужно имя и ссылка с кодом комнаты.';return home()}err='Подключаюсь…';home();joinGame()}
+function guestMsg(d){if(!d)return;if(d.t==='kicked'){kickedFlag=true;banner('');err='Хозяин удалил тебя из комнаты.';try{hostConn.close()}catch(e){}home();return}banner('');if(d.t==='lobby'){LN=d.names;if(!lastG)draw(null)}else if(d.t==='view')render(d.g);else if(d.t==='snap'){snap=d.S;isBackup=true}else if(d.t==='pl'){plist=d.ids;voiceSync()}else if(d.t==='msg')onMsg(d)}
+function create(){if(!isOwner){err='Создавать комнаты может только хозяин игры.';return home()}myName=getName();if(!myName){err='Введи имя.';return home()}code=Math.random().toString(36).slice(2,7);err='Создаю комнату…';home();history.replaceState(null,'','#'+code);openHost(true)}
+function join(){kickedFlag=false;myName=getName();code=cl();if(!myName||!code){err='Нужно имя и ссылка с кодом комнаты.';return home()}err='Подключаюсь…';home();joinGame()}
 function send(m){if(isHost){const me=LB.find(e=>!e.c);apply(me?me.idx:0,m)}else if(hostConn)hostConn.send({t:'mv',m})}
 function copyLink(){try{navigator.clipboard.writeText(link()).then(()=>{$e('cp').textContent='Скопировано ✅'})}catch(e){$e('lk').select()}}
 function render(g){lastG=g;try{document.body.classList.toggle('chaos',!!g.cm)}catch(e){}skew=g.now-Date.now();
@@ -509,16 +510,27 @@ function info(c){infoC=infoC===c?null:c;selS=[];draw(lastG)}
 function applyBack(){let k='color';try{k=localStorage.getItem('rz_back')||'color'}catch(e){}document.documentElement.style.setProperty('--back','url(cards/joker-'+k+'.jpg)');return k}
 function setBack(k){try{localStorage.setItem('rz_back',k)}catch(e){}applyBack();home()}
 const backsHtml=()=>{const k=applyBack();return `<div class="tag">Рубашка карт</div><div class="backs">${['color','bw'].map(x=>`<button class="bk ${k===x?'on':''}" onclick="setBack('${x}')" style="background-image:url(cards/joker-${x}.jpg)"></button>`).join('')}</div>`};
+const OWNER_HASH='198899b8eae4f52094e6f52fc0f5a389702e750e74a1772e2104d8d0828e8488';let isOwner=false,kickedFlag=false;const BAN=new Set();try{isOwner=localStorage.getItem('rz_owner')==='1'}catch(e){}
+function ownerCheck(){const h=location.hash.slice(1);if(!h.startsWith('owner='))return;const tok=h.slice(6);
+ try{crypto.subtle.digest('SHA-256',new TextEncoder().encode(tok)).then(b=>{const hx=[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');if(hx===OWNER_HASH){isOwner=true;try{localStorage.setItem('rz_owner','1')}catch(e){}history.replaceState(null,'',location.pathname+location.search);err='';home()}else{err='Неверная ссылка хозяина.';home()}})}catch(e){err='Не удалось проверить ссылку хозяина (нужен https).';home()}}
+function kickConn(e){BAN.add(e.uid);try{e.c.send({t:'kicked'})}catch(x){}
+ if(S&&e.idx>=0&&S.ph==='play'&&alive(e.idx))leave(e.idx);
+ const c=e.c;setTimeout(()=>{try{c.close()}catch(x){}},150);
+ const k=LB.indexOf(e);if(k>=0)LB.splice(k,1);bPl();if(S)pub();else bLobby()}
+function kickEntry(i){const e=LB[i];if(!isHost||!e||!e.c||!confirm('Удалить игрока «'+e.name+'»?'))return;kickConn(e)}
+function kickPlayer(i){const e=LB.find(x=>x.idx===i&&x.c);if(!isHost||!e||!confirm('Удалить игрока «'+e.name+'»?'))return;kickConn(e)}
+const specHtml=()=>{const sp=LB.map((e,k)=>[e,k]).filter(([e])=>e.c&&e.idx<0);return sp.length?`<div class="tag">Зрители: ${sp.map(([e,k])=>esc(e.name)+` <button class="kick" onclick="kickEntry(${k})">✕</button>`).join(' · ')}</div>`:''};
+const VER='23.10 14:57';function ownerOff(){try{localStorage.removeItem('rz_owner')}catch(e){}isOwner=false;home()}
 function home(){const hc=cl();
  $.innerHTML=`<h1>🃏 Дурак: Старшая карта</h1><p class="tag">Дурак со способностями карт. 2–8 игроков.</p>${backsHtml()}${themeHtml()}
  <input id="nm" maxlength="16" placeholder="Твоё имя" value="${esc(myName)}">${hc?`<button class="b" onclick="join()">Войти в комнату ${esc(hc)}</button>`:''}
- <button class="b ${hc?'alt':''}" onclick="create()">Создать новую комнату</button><p class="err">${esc(err)}</p>`}
+ ${isOwner?`<button class="b ${hc?'alt':''}" onclick="create()">Создать новую комнату</button><p class="tag">👑 Режим хозяина · <a href="#" onclick="ownerOff();return false">выйти</a></p>`:(hc?'':'<p class="tag">Чтобы сыграть, открой ссылку-приглашение от хозяина игры.</p>')}<p class="err">${esc(err)}</p><p class="tag" style="opacity:.55;font-size:11px">версия ${VER}</p>`}
 function draw(g){
  const mi=g?g.you:-1;myIdx=mi;let h='';
  if(!g){
   h+=`<h1>Комната ${esc(code)}</h1><p class="tag">Отправь ссылку друзьям.</p>
   <div class="copy"><input id="lk" readonly value="${esc(link())}" onclick="this.select()"><button class="b" id="cp" onclick="copyLink()">Копировать</button></div>
-  <div class="plist">${(isHost?LB.map(e=>e.name):LN).map((n,i)=>`<div class="pl">${i<MAXP?'':'👀 '}${esc(n)}${i===0?' 👑':''}</div>`).join('')}</div>`;
+  <div class="plist">${(isHost?LB.map(e=>e.name):LN).map((n,i,arr)=>`<div class="pl">${i<MAXP?'':'👀 '}${esc(n)}${i===0?' 👑':''}${arr.filter(z=>z===n).length>1?' ⚠️':''}${isHost&&i>0?`<button class="kick" onclick="kickEntry(${i})">✕</button>`:''}</div>`).join('')}</div>`;
   if(isHost&&LB.length>=2){h+=`${optsHtml('draw(null)')}${selMode===1?'':`<p><b>Масть со способностями:</b></p>${suBtns('draw(null)')}`}
   ${selMode===1?'<p class="tag">🌀 Хаос: у каждого достоинства (2…Т) случайная масть, и способность есть только у этой одной карты.</p>':selSu<4?`<details><summary>Способности ${SY[selSu]} ${SN[selSu]}</summary>${ABIL[selSu].map((a,i)=>`${RK[i]}${SY[selSu]} ${a[2]>0?'⚡'+fmt(a[2]):''}<b>${esc(a[1])}</b>: ${dsc(a[0])}`).join('<br>')}</details>`:'<p class="tag">🎲 Масть со способностями выберется случайно в начале каждой партии.</p>'}${tmBtns('draw(null)')}<button class="b" onclick="start()">Начать игру</button>`}
   else if(isHost)h+=`<p class="tag">Ждём хотя бы одного игрока…</p>`;else h+=`<p class="tag">Ждём, пока хост начнёт игру.</p>`;
@@ -529,8 +541,8 @@ function draw(g){
  const face=c=>`<span class="mf ${su(c)===1||su(c)===2?'r':''} ${su(c)===g.tr?'tp':''}">${cn(c)}</span>`;
  const mini=i=>{if(i===mi)return '';const H=g.h[i],f=H.filter(c=>c>=0),b=H.length-f.length;return `<div class="mini">${f.map(face).join('')}${'<span class="mb"></span>'.repeat(b)}</div>`};
  const open=g.dk.filter(c=>c>=0),red=g.tr===1||g.tr===2;
- h+=`<div class="info"><div class="chip"><span class="bksm"></span> <b>${g.dk.length}</b></div><div class="chip tbx">козырь <b${red?' style="color:var(--red)"':''}>${SY[g.tr]}</b></div>${g.cm?'<div class="chip abx s0">🌀 <b>Хаос</b></div>':`<div class="chip abx s${g.su}">✨ <b>${SY[g.su]}</b> ${SN[g.su]}</div>`}${g.nd===104?'<div class="chip">2×52</div>':''}${g.tm&&g.dl&&play?'<div class="chip">⏱ <b id="tmr"></b></div>':''}${g.dr<0?'<div class="chip">↺</div>':''}${g.lk?'<div class="chip">🔇×'+g.lk.r+'</div>':''}${g.bn?`<div class="chip">🚫 ${SY[g.bn.s]}×${g.bn.r}</div>`:''}</div>${open.length?`<div class="tag">Открыты в колоде: ${open.map(face).join('')}</div>`:''}${mi<0?'<div class="tag">👀 ты зритель</div>':''}`;
- h+=`<div class="plist">${g.nm.map((n,i)=>`<div class="pl ${i===g.at?'at':''} ${i===D?'df':''} ${g.out.includes(i)?'out':''}">${play&&i===g.at?'⚔️ ':play&&i===D?'🛡 ':''}${esc(n)}${i===mi?' (ты)':''}${g.lv.includes(i)?' (вышел)':''}${(g.off||[]).includes(i)?' (нет связи)':''}${(g.ps||[]).includes(i)?' ✅':''}<br><b>${g.h[i].length}</b> 🃏 · ⚡${fmt(g.ch[i])}${g.fr&&g.fr[i]>0?' 🧊'+g.fr[i]:''}${mini(i)}</div>`).join('')}</div>`;
+ h+=`<div class="info"><div class="chip"><span class="bksm"></span> <b>${g.dk.length}</b></div><div class="chip tbx">козырь <b${red?' style="color:var(--red)"':''}>${SY[g.tr]}</b></div>${g.cm?'<div class="chip abx s0">🌀 <b>Хаос</b></div>':`<div class="chip abx s${g.su}">✨ <b>${SY[g.su]}</b> ${SN[g.su]}</div>`}${g.nd===104?'<div class="chip">2×52</div>':''}${g.tm&&g.dl&&play?'<div class="chip">⏱ <b id="tmr"></b></div>':''}${g.dr<0?'<div class="chip">↺</div>':''}${g.lk?'<div class="chip">🔇×'+g.lk.r+'</div>':''}${g.bn?`<div class="chip">🚫 ${SY[g.bn.s]}×${g.bn.r}</div>`:''}</div>${open.length?`<div class="tag">Открыты в колоде: ${open.map(face).join('')}</div>`:''}${mi<0?'<div class="tag">👀 ты зритель</div>':''}${isHost?specHtml():''}`;
+ h+=`<div class="plist">${g.nm.map((n,i)=>`<div class="pl ${i===g.at?'at':''} ${i===D?'df':''} ${g.out.includes(i)?'out':''}">${play&&i===g.at?'⚔️ ':play&&i===D?'🛡 ':''}${esc(n)}${i===mi?' (ты)':''}${g.lv.includes(i)?' (вышел)':''}${(g.off||[]).includes(i)?' (нет связи)':''}${(g.ps||[]).includes(i)?' ✅':''}${isHost&&i!==mi&&!g.out.includes(i)?`<button class="kick" onclick="kickPlayer(${i})">✕</button>`:''}<br><b>${g.h[i].length}</b> 🃏 · ⚡${fmt(g.ch[i])}${g.fr&&g.fr[i]>0?' 🧊'+g.fr[i]:''}${mini(i)}</div>`).join('')}</div>`;
  h+=`<div class="table">${g.tb.length?g.tb.map(([a,d,b])=>`<div class="pair ${prevTb.has(a)&&(d<0||prevTb.has(d))?'':'in'}">${card(a,g,'',false,true)}${d>=0?card(d,g,'',false,true):''}${b?`<span class="pill" style="position:absolute;top:-8px;right:-6px">${b>0?'+':''}${b}</span>`:''}</div>`).join(''):'<span class="tag">Стол пуст</span>'}</div>`;
  prevTb=new Set(g.tb.flatMap(x=>[x[0],x[1]]));
  if(g.ph==='over'){h+=`<h1>${g.lz>=0?'🤡 Дурак: '+esc(g.nm[g.lz]):'Ничья!'}</h1><p>${g.out.filter(i=>!g.lv.includes(i)).map((i,k)=>(k+1)+'. '+esc(g.nm[i])).join('<br>')}</p>`;if(isHost)h+=optsHtml('draw(lastG)')+(selMode===1?'':suBtns('draw(lastG)'))+tmBtns('draw(lastG)')+`<button class="b" onclick="start()">Новая партия</button>`}
@@ -550,7 +562,7 @@ function draw(g){
  else{const ab=abOf(pc,g);h+=`<div class="prev">${card(pc,g)}<div><b>${cn(pc)}</b>${su(pc)===g.tr?' · козырь':''}<br>${ab?`<b>${esc(ab[1])}</b>: ${dsc(ab[0])}${ab[2]>0?' · стоит ⚡'+fmt(ab[2]):''}`:'обычная карта'}${can&&selS.length===1?`<br><button class="b" onclick="act(${pc})">Сыграть</button>`:can&&selS.length>1?`<br><b>Выбрано:</b> ${selS.map(cn).join(' ')}<br><button class="b" onclick="playSel()">Сыграть все (${selS.length})</button>`:''}${can&&selS.length===1&&mi===D&&canTrf(g,pc)?`<br><button class="b alt" onclick="trfSel()">Перевести</button>`:''}</div></div>`}
  if(mi>=0)h+=`<div class="hand">${hand.map(c=>card(c,g,selS.includes(c)?'sel':'',can,!can)).join('')}</div>`;
  $.innerHTML=h;window.scrollTo(0,y)}
-applyBack();applyTheme();home();
+applyBack();applyTheme();home();ownerCheck();
 document.addEventListener('pointerdown',()=>ac(),{once:true});
 setInterval(tickTimers,500);
 try{if(!localStorage.getItem('rz_help')){showHelp();localStorage.setItem('rz_help','1')}}catch(e){}
