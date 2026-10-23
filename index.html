@@ -61,11 +61,11 @@ details{margin:8px 0;font-size:13px;color:var(--muted)}
 <script>
 
 const SY=['♠','♥','♦','♣'],SN=['Пики','Черви','Бубны','Трефы'],RK=['2','3','4','5','6','7','8','9','10','В','Д','К','Т'];
-const DESC={dr:'сбрасываешь младшую карту',d2r:'сбрасываешь 2 младшие',gv:'младшая карта уходит следующему',gl:'младшая карта уходит предыдущему',gr:'младшая карта уходит случайному',ga:'каждому по младшей карте',pn:'соперник берёт +1',pm:'соперник берёт +2',pr:'случайный берёт +1',pa:'все берут +1',bo:'у соперника сгорает сильнейшая карта',br:'у случайного сгорает сильнейшая',b2:'у соперника сгорают 2 сильные',ba:'у всех сгорает сильнейшая',fz:'отбиться нельзя',sk:'ты ходишь снова',rv:'смена направления хода',sw:'обмен руками с соперником',tr:'козырь меняется на эту масть',lk:'способности выключены до конца раунда',ch:'+1 заряд'};
-const RAW=[['pn|Нео Нью Намбу','dr|Клинок-дублёр','bo|Рикошет','pn+dr|Стальной занавес','br|Шальная пуля','pm|Огненный выстрел','b2|Залп','gv+bo|Патронташ','ba|Град пуль','fz|Копьё','fz+bo|Любовь и мир','sk+ba|Замок-темница','tr+ba+pa|Королевский арсенал'],
-['dr+ch|Пластик','ch|Второе дыхание','gv|Заживление','d2r|Калорийный максимум','gl|Эластичный щит','gr|Прилив крови','pr|Яд в крови','gv+ch|Донорство','rv|Метаморфоза','pa|Эпидемия','fz+gl|Гипноз','sw|Обмен телами','ga+ch|Бессмертие'],
-['dr+gr|Счастливый случай','gv+pn|Мраморный грохот','d2r+gv|Мим времени','bo+dr|Золотое прикосновение','gl+pn|Ставка','pm+dr|Обмен валюты','br+gv|Налог','rv+dr|Откат','sk|Перемотка','lk|Высокое благо','sw+pn|Балор','sk+pm|День получки','tr+sw|Революция'],
-['dr+br|Росток','gr+pn|Зелень','gl+dr|Круши и ломай','ch+pn|Корни','pr+dr|Град','gv+pr|Лоза','d2r+pn|Урожай','b2+dr|Кружащийся клинок','ba+ch|Миллион вольт','rv+pn|Ветер перемен','lk+pn|Заморозки','fz+pr|Буря','ga+tr|Гнев природы']];
+const DESC={dr:'сбрасываешь младшую карту',gv:'младшая карта уходит следующему',ga:'каждому по младшей карте',pn:'соперник берёт +1',pa:'все берут +1',bo:'у соперника сгорает сильнейшая карта',ba:'у всех сгорает сильнейшая',fz:'отбиться нельзя',sk:'ты ходишь снова',rv:'смена направления хода',sw:'обмен руками с соперником',tr:'козырь меняется на эту масть',lk:'способности выключены до конца раунда',ch:'+1 заряд',wd:'бьёт любую некозырную карту',rf:'атакующая карта возвращается атакующему',cap:'в раунде не больше 2 пар',ban:'соперник не может ходить своей любимой мастью',wk:'атакующая карта слабеет на 3',st:'твоя карта становится сильнее на 3',lt:'каждый отдаёт случайную карту следующему',cr:'все руки сдвигаются по кругу',eq:'карты у всех раздаются заново поровну',gm:'орёл: сброс младшей, решка: +2 карты',xc:'обмен: твоя младшая на сильнейшую соперника',rev:'две карты соперника видны всем',pk:'три верхние карты колоды видны всем',sh:'щит: следующий раз не берёшь карты',gy:'соперник берёт карту из сброса',ec:'повторяет прошлую способность'};
+const RAW=[['pn|Нео Нью Намбу','wd|Парирование','bo|Рикошет','cap|Стальной занавес','ban|Прицел','st|Огненный выстрел','rf|Контрудар','gy|Могильщик','ba|Град пуль','fz|Копьё','fz+bo|Любовь и мир','sk+ban|Замок-темница','tr+ba|Королевский арсенал'],
+['sh|Пластик','ch|Второе дыхание','gv|Заживление','lt|Калорийный максимум','rev|Диагностика','xc|Донорство','gm|Адреналин','ec|Регенерация','cr|Метаморфоза','pa|Эпидемия','fz+gv|Гипноз','sw|Обмен телами','eq+sh|Бессмертие'],
+['pk|Счастливый случай','wk|Мраморный грохот','ec|Мим времени','xc|Золотое прикосновение','gm|Ставка','cr|Обмен валюты','rev|Аудит','rf|Откат','sk|Перемотка','lk|Высокое благо','rev+wk|Балор','sk+gm|День получки','tr+eq|Революция'],
+['ch|Росток','st|Зелень','wk|Круши и ломай','sh|Корни','ban|Град','wd|Лоза','gv|Урожай','bo|Кружащийся клинок','ba|Миллион вольт','rv|Ветер перемен','lk|Заморозки','fz+ban|Буря','ga+tr|Гнев природы']];
 const ABIL=RAW.map(a=>a.map(s=>s.split('|')));
 const dsc=e=>e.split('+').map(t=>DESC[t]).join(' · ');
 const PT=[['⚔️','💥','🔩'],['❤️','✨','💗'],['💎','⏳','🪙'],['🌿','⚡','🍃']];
@@ -76,60 +76,80 @@ const rnd=n=>Math.floor(Math.random()*n);
 
 let S=null,lastG=null,selSu=1,seenFx=-1,curGid=0,sel=null,myIdx=-1,err='',code='',myName='',peer=null,hostConn=null,isHost=false,LB=[],LN=[];
 const MAXP=8,PREF='rzkdurak-';
-const TV={dr:['💨','🗑️'],d2r:['💨','🗑️'],gv:['✉️','🃏'],gl:['✉️','🃏'],gr:['🎁','🃏'],ga:['🎁','🎁'],pn:['🃏','⬇️'],pm:['🃏','🃏'],pr:['🃏','🎯'],pa:['🃏','☠️'],bo:['🔥','💥'],br:['🔥','🎯'],b2:['🔥','🔥'],ba:['🔥','☄️'],fz:['⛓️','🔒'],sk:['⏩','⏱️'],rv:['🔄','🌀'],sw:['🔀','🤝'],tr:['👑','🌈'],lk:['❄️','🔇'],ch:['⚡','🔋']};
-const MV={dr:'u',d2r:'u',gv:'s',gl:'s',gr:'s',ga:'s',pn:'d',pm:'d',pr:'d',pa:'d',bo:'u',br:'u',b2:'u',ba:'u',fz:'d',sk:'s',rv:'r',sw:'s',tr:'u',lk:'d',ch:'u'};
+const TV={dr:['💨','🗑️'],gv:['✉️','🃏'],ga:['🎁','🎁'],pn:['🃏','⬇️'],pa:['🃏','☠️'],bo:['🔥','💥'],ba:['🔥','☄️'],fz:['⛓️','🔒'],sk:['⏩','⏱️'],rv:['🔄','🌀'],sw:['🔀','🤝'],tr:['👑','🌈'],lk:['❄️','🔇'],ch:['⚡','🔋'],wd:['🛡️','⚔️'],rf:['🪞','↩️'],cap:['🚧','🔢'],ban:['🚫','🎯'],wk:['📉','💧'],st:['📈','✨'],lt:['🎲','🃏'],cr:['🎠','🔄'],eq:['⚖️','🃏'],gm:['🎰','🍀'],xc:['🤝','💱'],rev:['👁️','🔍'],pk:['🔮','✨'],sh:['🛡️','💠'],gy:['⚰️','👻'],ec:['🔁','📣']};
+const MV={dr:'u',gv:'s',ga:'s',pn:'d',pa:'d',bo:'u',ba:'u',fz:'d',sk:'s',rv:'r',sw:'s',tr:'u',lk:'d',ch:'u',wd:'r',rf:'s',cap:'d',ban:'d',wk:'d',st:'u',lt:'s',cr:'r',eq:'r',gm:'u',xc:'s',rev:'r',pk:'u',sh:'r',gy:'d',ec:'r'};
 const cl=()=>location.hash.slice(1).toLowerCase().replace(/[^a-z0-9]/g,'');
 const link=()=>location.href.split('#')[0]+'#'+code;
 const getName=()=>{const n=document.getElementById('nm');return n?n.value.trim().slice(0,16):myName};
 const su=c=>Math.floor(c/13),rk=c=>c%13;
-const beats=(a,d,tr)=>(su(a)===su(d)&&rk(d)>rk(a))||(su(d)===tr&&su(a)!==tr);
+const beats=(a,d,tr,b=0)=>(su(a)===su(d)&&rk(d)>rk(a)+b)||(su(d)===tr&&su(a)!==tr);
 const alive=(i,g=S)=>!g.out.includes(i);
 function nxt(p,d,g=S){d=d||g.dr;let q=p;do{q=(q+d+g.n)%g.n}while(!alive(q,g)&&q!==p);return q}
 const val=c=>rk(c)+(su(c)===S.tr?20:0);
 const low=p=>S.h[p].length?S.h[p].reduce((a,b)=>val(b)<val(a)?b:a):-1;
 const high=p=>S.h[p].length?S.h[p].reduce((a,b)=>val(b)>val(a)?b:a):-1;
 const rem=(p,c)=>{S.h[p]=S.h[p].filter(x=>x!==c)};
-function giveTo(p,q){const c=low(p);if(c<0||q===p)return;rem(p,c);S.h[q].push(c)}
-function dump(p,n){while(n--){const c=low(p);if(c<0)break;rem(p,c)}}
-function burn(q,n){while(n--){const c=high(q);if(c<0)break;rem(q,c)}}
+function giveTo(p,q){const c=low(p);if(c<0||q===p||S.h[p].length<2)return;rem(p,c);S.h[q].push(c)}
+function dump(p,n){while(n--&&S.h[p].length>1){const c=low(p);rem(p,c);S.dc.push(c)}}
+function burn(q,n){while(n--){const c=high(q);if(c<0)break;rem(q,c);S.dc.push(c)}}
 function drw(q,n){while(n--&&S.dk.length)S.h[q].push(S.dk.pop())}
-function trig(p,c){if(S.su!==su(c)||S.lk)return;const a=ABIL[S.su][rk(c)],k=tier(rk(c)),nf=(S.fx?S.fx.n:0)+1;
- if(k===3){if(S.ch[p]<1){S.fx={n:nf,t:S.nm[p]+' · '+a[1],d:'нет заряда ⚡',s:S.su,k:1,e:''};return}S.ch[p]--}
- const D=nxt(S.at),o=p===D?S.at:D,ot=[...Array(S.n).keys()].filter(i=>alive(i)&&i!==p),R=ot[rnd(ot.length)];
- for(const t of a[0].split('+')){
-  if(t==='dr')dump(p,1);else if(t==='d2r')dump(p,2);
-  else if(t==='gv')giveTo(p,nxt(p));else if(t==='gl')giveTo(p,nxt(p,-S.dr));else if(t==='gr'&&R!==undefined)giveTo(p,R);else if(t==='ga')ot.forEach(q=>giveTo(p,q));
-  else if(t==='pn')drw(o,1);else if(t==='pm')drw(o,2);else if(t==='pr'&&R!==undefined)drw(R,1);else if(t==='pa')ot.forEach(q=>drw(q,1));
-  else if(t==='bo')burn(o,1);else if(t==='br'&&R!==undefined)burn(R,1);else if(t==='b2')burn(o,2);else if(t==='ba')ot.forEach(q=>burn(q,1));
-  else if(t==='fz'){if(p===S.at)S.fz=true}else if(t==='sk')S.sk=p;else if(t==='rv')S.dr=-S.dr;
-  else if(t==='sw')[S.h[p],S.h[o]]=[S.h[o],S.h[p]];else if(t==='tr')S.tr=su(c);else if(t==='lk')S.lk=true;else if(t==='ch')S.ch[p]=Math.min(3,S.ch[p]+1)}
- S.fx={n:nf,t:S.nm[p]+' · '+a[1],d:dsc(a[0]),s:S.su,k:k,e:a[0]}}
+const wild=c=>S.su===su(c)&&!S.lk&&ABIL[S.su][rk(c)][0].split('+').includes('wd');
+const tbc=()=>S.tb.flatMap(x=>[x[0],x[1]]).filter(x=>x>=0);
+const cn=c=>RK[rk(c)]+SY[su(c)];
+function runTok(t,x){const p=x.p,o=x.o,ot=x.ot,H=S.h;
+ if(t==='dr')dump(p,1);else if(t==='gv')giveTo(p,nxt(p));else if(t==='ga')ot.forEach(q=>giveTo(p,q));
+ else if(t==='pn')drw(o,1);else if(t==='pa')ot.forEach(q=>drw(q,1));
+ else if(t==='bo')burn(o,1);else if(t==='ba')ot.forEach(q=>burn(q,1));
+ else if(t==='fz'){if(p===S.at)S.fz=true}else if(t==='sk')S.sk=p;else if(t==='rv')S.dr=-S.dr;
+ else if(t==='sw')[H[p],H[o]]=[H[o],H[p]];else if(t==='tr')S.tr=su(x.c);else if(t==='lk')S.lk=true;else if(t==='ch')S.ch[p]=Math.min(3,S.ch[p]+1);
+ else if(t==='cap')S.cap=2;
+ else if(t==='ban'){if(H[o].length){const n=[0,0,0,0];H[o].forEach(c=>n[su(c)]++);S.bn={s:n.indexOf(Math.max(...n)),by:p}}}
+ else if(t==='wk'){const k=S.tb.findIndex(y=>y[1]<0);if(k>=0)S.tb[k][2]-=3}
+ else if(t==='st'){const k=S.tb.findIndex(y=>y[0]===x.c);if(k>=0)S.tb[k][2]+=3}
+ else if(t==='rf'){const k=S.tb.findIndex(y=>y[1]===x.c);if(p===nxt(S.at)&&k>=0){S.h[S.at].push(S.tb[k][0]);S.dc.push(x.c);S.tb.splice(k,1)}}
+ else if(t==='lt'){const al=[...Array(S.n).keys()].filter(i=>alive(i)&&H[i].length>1),pk=al.map(i=>H[i].splice(rnd(H[i].length),1)[0]);al.forEach((i,k)=>H[nxt(i)].push(pk[k]))}
+ else if(t==='cr'){const al=[...Array(S.n).keys()].filter(i=>alive(i)),old=al.map(i=>H[i]);al.forEach((i,k)=>{H[nxt(i)]=old[k]})}
+ else if(t==='eq'){const al=[...Array(S.n).keys()].filter(i=>alive(i)),pool=al.flatMap(i=>H[i]);for(let i=pool.length-1;i>0;i--){const j=rnd(i+1);[pool[i],pool[j]]=[pool[j],pool[i]]}al.forEach(i=>{H[i]=[]});pool.forEach((c,k)=>H[al[k%al.length]].push(c))}
+ else if(t==='gm'){if(rnd(2))dump(p,1);else drw(p,2)}
+ else if(t==='xc'){const a=low(p),b=high(o);if(a>=0&&b>=0){rem(p,a);rem(o,b);H[p].push(b);H[o].push(a)}}
+ else if(t==='rev'){const h=H[o].slice().sort(()=>Math.random()-.5).slice(0,2);if(h.length)x.txt.push(S.nm[o]+': '+h.map(cn).join(', '))}
+ else if(t==='pk'){const h=S.dk.slice(-3).reverse();if(h.length)x.txt.push('колода: '+h.map(cn).join(', '))}
+ else if(t==='sh')S.sh[p]=true;
+ else if(t==='gy'){if(S.dc.length)H[o].push(S.dc.pop())}
+ else if(t==='ec'&&S.last)S.last.split('+').forEach(u=>{if(u!=='ec'&&u!=='tr')runTok(u,x)})}
+function trig(p,c){if(S.su!==su(c)||S.lk)return;const a=ABIL[S.su][rk(c)],k=tier(rk(c)),nf=(S.fx?S.fx.n:0)+1,e=a[0];
+ if(k<3){if(S.ua.includes(p)&&e!=='wd')return;S.ua.push(p)}
+ else{if(S.ch[p]<1){S.fx={n:nf,t:S.nm[p]+' · '+a[1],d:'нет заряда ⚡',s:S.su,k:1,e:''};return}S.ch[p]--}
+ const D=nxt(S.at),o=p===D?S.at:D,ot=[...Array(S.n).keys()].filter(i=>alive(i)&&i!==p),x={p,c,o,ot,txt:[]};
+ for(const t of e.split('+'))runTok(t,x);
+ if(!e.split('+').includes('ec'))S.last=e;
+ S.fx={n:nf,t:S.nm[p]+' · '+a[1],d:dsc(e)+(x.txt.length?' · '+x.txt.join(' · '):''),s:S.su,k:k,e:e}}
 function endRound(nx){S.tb=[];const ord=[];let q=S.at;do{ord.push(q);q=nxt(q)}while(q!==S.at&&ord.length<S.n);
  if(ord.length>2)ord.push(ord.splice(1,1)[0]);
  for(const i of ord)while(S.h[i].length<6&&S.dk.length)S.h[i].push(S.dk.pop());
  S.cr++;if(S.cr%2===0)S.ch=S.ch.map(x=>Math.min(3,x+1));
- const sk=S.sk;S.fz=false;S.sk=-1;S.lk=false;S.bk=null;S.lm=-1;
+ const sk=S.sk;S.fz=false;S.sk=-1;S.lk=false;S.bk=null;S.lm=-1;S.ua=[];S.bn=null;S.cap=0;
  if(!S.dk.length)for(let i=0;i<S.n;i++)if(alive(i)&&!S.h[i].length)S.out.push(i);
  const al=[...Array(S.n).keys()].filter(i=>alive(i));
  if(al.length<=1){S.ph='over';S.lz=al.length?al[0]:-1;return}
  let a=sk>=0&&alive(sk)?sk:nx;if(!alive(a))a=nxt(a);S.at=a}
 function apply(p,m){if(!S||S.ph!=='play'||!alive(p))return;const D=nxt(S.at),H=S.h;
- if(m.t==='atk'){if(!H[p].includes(m.c)||p===D)return;
+ if(m.t==='atk'){if(!H[p].includes(m.c)||p===D||(S.bn&&S.bn.by!==p&&su(m.c)===S.bn.s))return;
   if(!S.tb.length){if(p!==S.at)return}else if(!S.tb.some(x=>rk(x[0])===rk(m.c)||(x[1]>=0&&rk(x[1])===rk(m.c))))return;
-  if(S.tb.length>=6||S.tb.filter(x=>x[1]<0).length>=H[D].length)return;
-  const bk=JSON.stringify({...S,bk:null});rem(p,m.c);S.tb.push([m.c,-1]);trig(p,m.c);S.bk=JSON.parse(bk);S.lm=p}
- else if(m.t==='def'){if(p!==D||S.fz||!H[p].includes(m.c))return;const k=S.tb.findIndex(x=>x[1]<0);
-  if(k<0||!beats(S.tb[k][0],m.c,S.tr))return;const bk=JSON.stringify({...S,bk:null});rem(p,m.c);S.tb[k][1]=m.c;trig(p,m.c);S.bk=JSON.parse(bk);S.lm=p}
- else if(m.t==='take'){if(p!==D||!S.tb.length)return;H[p].push(...S.tb.flat().filter(x=>x>=0));endRound(nxt(D))}
- else if(m.t==='done'){if(p!==S.at||!S.tb.length||S.tb.some(x=>x[1]<0))return;endRound(D)}
+  if(S.tb.length>=(S.cap||6)||S.tb.filter(x=>x[1]<0).length>=H[D].length)return;
+  const bk=JSON.stringify({...S,bk:null});rem(p,m.c);S.tb.push([m.c,-1,0]);trig(p,m.c);S.bk=JSON.parse(bk);S.lm=p}
+ else if(m.t==='def'){if(p!==D||S.fz||!H[p].includes(m.c)||(S.bn&&S.bn.by!==p&&su(m.c)===S.bn.s))return;const k=S.tb.findIndex(x=>x[1]<0);
+  if(k<0||!(beats(S.tb[k][0],m.c,S.tr,S.tb[k][2]||0)||(wild(m.c)&&su(S.tb[k][0])!==S.tr)))return;const bk=JSON.stringify({...S,bk:null});rem(p,m.c);S.tb[k][1]=m.c;trig(p,m.c);S.bk=JSON.parse(bk);S.lm=p}
+ else if(m.t==='take'){if(p!==D||!S.tb.length)return;if(S.sh[p]){S.sh[p]=false;S.dc.push(...tbc());endRound(D)}else{H[p].push(...tbc());endRound(nxt(D))}}
+ else if(m.t==='done'){if(p!==S.at||!S.tb.length||S.tb.some(x=>x[1]<0))return;S.dc.push(...tbc());endRound(D)}
  else if(m.t==='undo'){if(S.lm!==p||!S.bk)return;const f=S.fx;S=S.bk;S.fx=f;S.bk=null;S.lm=-1}
  pub()}
 
 function start(){const ps=LB.slice(0,MAXP),n=ps.length,d=[...Array(52).keys()];for(let i=51;i>0;i--){const j=rnd(i+1);[d[i],d[j]]=[d[j],d[i]]}
  LB.forEach(e=>e.idx=-1);ps.forEach((e,i)=>e.idx=i);
- S={gid:Date.now(),ph:'play',su:selSu,tr:su(d[0]),dk:d,n,nm:ps.map(e=>e.name),h:Array.from({length:n},()=>[]),tb:[],at:rnd(n),dr:1,ch:Array(n).fill(1),cr:0,out:[],lv:[],fz:false,sk:-1,lk:false,lm:-1,bk:null,fx:null,lz:-1};
+ S={gid:Date.now(),ph:'play',su:selSu,tr:su(d[0]),dk:d,n,nm:ps.map(e=>e.name),h:Array.from({length:n},()=>[]),tb:[],at:rnd(n),dr:1,ch:Array(n).fill(1),cr:0,out:[],lv:[],dc:[],sh:Array(n).fill(false),bn:null,cap:0,last:'',ua:[],fz:false,sk:-1,lk:false,lm:-1,bk:null,fx:null,lz:-1};
  for(let i=0;i<n;i++)S.h[i]=S.dk.splice(-6);sel=null;pub()}
-function V(i){return {...S,you:i,dk:Array(S.dk.length).fill(0),h:S.h.map((x,j)=>j===i?x:Array(x.length).fill(-1)),bk:!!S.bk}}
+function V(i){return {...S,you:i,dk:Array(S.dk.length).fill(0),h:S.h.map((x,j)=>j===i?x:Array(x.length).fill(-1)),bk:!!S.bk,dc:[]}}
 function pub(){for(const e of LB){const v=V(e.idx);if(e.c)e.c.send({t:'view',g:v});else render(v)}}
 function bLobby(){LN=LB.map(e=>e.name);for(const e of LB)if(e.c)e.c.send({t:'lobby',names:LN});if(!S||S.ph==='over'&&false)draw(null)}
 function hostGame(){peer=new Peer(PREF+code);
@@ -179,7 +199,7 @@ function draw(g){
  const D=nxt(g.at,g.dr,g);
  h+=`<div class="plist">${g.nm.map((n,i)=>`<div class="pl ${i===g.at?'at':''} ${i===D?'df':''} ${g.out.includes(i)?'out':''}">${g.ph==='play'&&i===g.at?'⚔️ ':g.ph==='play'&&i===D?'🛡 ':''}${esc(n)}${i===mi?' (ты)':''}${g.lv.includes(i)?' (вышел)':''}<br><b>${g.h[i].length}</b> 🃏 · ⚡${g.ch[i]}</div>`).join('')}</div>
  <div class="tag">Колода: <b>${g.dk.length}</b> · козырь ${SY[g.tr]} · ход ${g.dr>0?'↻':'↺'} · способности: ${SY[g.su]} ${SN[g.su]}${g.lk?' · 🔇 тишина':''}${mi<0?' · 👀 ты зритель':''}</div>`;
- h+=`<div class="table">${g.tb.length?g.tb.map(([a,d])=>`<div class="pair">${card(a,g)}${d>=0?card(d,g):''}</div>`).join(''):'<span class="tag">Стол пуст</span>'}</div>`;
+ h+=`<div class="table">${g.tb.length?g.tb.map(([a,d,b])=>`<div class="pair">${card(a,g)}${d>=0?card(d,g):''}${b?`<span class="pill" style="position:absolute;top:-8px;right:-6px">${b>0?'+':''}${b}</span>`:''}</div>`).join(''):'<span class="tag">Стол пуст</span>'}</div>`;
  if(g.ph==='over'){h+=`<h1>${g.lz>=0?'🤡 Дурак: '+esc(g.nm[g.lz]):'Ничья!'}</h1><p>${g.out.filter(i=>!g.lv.includes(i)).map((i,k)=>(k+1)+'. '+esc(g.nm[i])).join('<br>')}</p>`;if(isHost)h+=`<button class="b" onclick="start()">Новая партия</button>`}
  else{h+=`<p>Атакует: <span class="pill">${esc(g.nm[g.at])}</span> → защищается: <span class="pill">${esc(g.nm[D])}</span></p>`;
   if(mi>=0&&mi===g.at&&g.tb.length&&g.tb.every(x=>x[1]>=0))h+=`<button class="b" onclick="send({t:'done'})">Бито</button>`;
