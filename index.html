@@ -19,12 +19,12 @@ button.b{font:inherit;font-weight:700;border:0;border-radius:12px;padding:13px;b
 button.b.alt{background:var(--card);color:var(--fg);border:2px solid var(--line)}
 button.b.on{outline:3px solid var(--acc)}
 .suits{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.suits .b{font-size:24px;padding:10px}
-.card{display:inline-flex;flex-direction:column;justify-content:space-between;width:60px;height:88px;border-radius:9px;border:2px solid var(--line);padding:4px 5px;font-weight:800;font-size:18px;line-height:1;color:#1d1a17;background:#fbf8f0;position:relative;flex:none;font-family:inherit;text-align:left;transition:transform .15s}
+.card{display:inline-flex;flex-direction:column;justify-content:space-between;width:64px;height:100px;border-radius:9px;border:2px solid var(--line);padding:4px 5px;font-weight:800;font-size:18px;line-height:1;color:#1d1a17;background:#fbf8f0;position:relative;flex:none;font-family:inherit;text-align:left;transition:transform .15s}
 .card.r{color:var(--red)}.card i{font-style:normal;font-size:24px;align-self:center}
 .card small{font-size:8px;font-weight:700;line-height:1.05;color:#4b2bb8;min-height:18px}
 .card.ab{border-color:var(--c);background:linear-gradient(120deg,#fbf8f0 0%,var(--c2) 40%,#fbf8f0 70%,var(--c2) 100%);background-size:250% 250%;animation:holo 3s linear infinite;box-shadow:0 0 calc(var(--t)*6px) var(--c)}
 .card.t3{animation-duration:1.3s}
-.s0{--c:#6b7c93;--c2:#cfd8e6}.s1{--c:#ff3b6b;--c2:#ffd0dc}.s2{--c:#e8b100;--c2:#fff0b3}.s3{--c:#2aa84a;--c2:#c8f0cf}
+.s0{--c:#2b2b33;--c2:#d9d9e2}.s1{--c:#b92b32;--c2:#f6cdd0}.s2{--c:#00518c;--c2:#c7defa}.s3{--c:#1d8043;--c2:#c9ecd6}
 .t1{--t:1}.t2{--t:2}.t3{--t:3}
 @keyframes holo{to{background-position:250% 0}}
 .hand{display:flex;gap:6px;overflow-x:auto;padding:16px 2px 8px}
@@ -40,7 +40,7 @@ details{margin:8px 0;font-size:13px;color:var(--muted)}
 #fx{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;z-index:50;text-align:center;padding:20px;animation:fx 1.8s ease-out forwards;background:radial-gradient(circle,#a56bffcc,#00000088)}
 #fx b{font-size:30px;color:#fff;text-shadow:0 0 20px #fff}#fx span{color:#fff;font-size:17px;margin-top:6px}
 #fx.t1 b{font-size:24px}#fx.t2 b{font-size:34px}#fx.t3 b{font-size:46px}
-#fx.s0{background:radial-gradient(circle,#8fa3bfcc,#000000aa)}#fx.s1{background:radial-gradient(circle,#ff3b6bcc,#400010aa)}#fx.s2{background:radial-gradient(circle,#ffd23fcc,#403000aa)}#fx.s3{background:radial-gradient(circle,#2fd05acc,#003010aa)}
+#fx.s0{background:radial-gradient(circle,#4a4a57cc,#000000cc)}#fx.s1{background:radial-gradient(circle,#d63a42cc,#3a0508cc)}#fx.s2{background:radial-gradient(circle,#1c7ac8cc,#021a33cc)}#fx.s3{background:radial-gradient(circle,#2fa05acc,#032a12cc)}
 #fx .pt{position:absolute;font-style:normal;font-size:26px;animation-duration:1.6s;animation-fill-mode:forwards;animation-timing-function:ease-out}
 #fx .pt.u{bottom:-20px;animation-name:fu}#fx .pt.d{top:-30px;animation-name:fdn}#fx .pt.s{left:-40px;animation-name:fsd}#fx .pt.r{animation-name:fr;font-size:44px}
 @keyframes fu{to{transform:translate(var(--dx),-110vh) rotate(360deg);opacity:0}}
@@ -57,7 +57,7 @@ details{margin:8px 0;font-size:13px;color:var(--muted)}
 button,.card{touch-action:manipulation;cursor:pointer}
 .hand{display:flex;flex-wrap:wrap;gap:8px;padding:10px 2px;overflow:visible}
 .card.sel{transform:none;outline:3px solid var(--acc);box-shadow:0 0 0 3px #fff,0 0 14px var(--acc)}
-.pair{width:88px;height:118px}.table .card{width:70px;height:100px;font-size:21px}.pair .card:nth-child(2){position:absolute;left:18px;top:16px;transform:rotate(8deg)}
+.pair{width:94px;height:132px}.table .card{width:72px;height:112px;font-size:21px}.pair .card:nth-child(2){position:absolute;left:20px;top:18px;transform:rotate(8deg)}
 .mini{display:flex;flex-wrap:wrap;align-items:center;margin-top:4px;min-height:22px}
 .mb{width:12px;height:18px;margin-right:-4px;border-radius:3px;background:repeating-linear-gradient(45deg,#7a3cff,#7a3cff 3px,#5a24d6 3px,#5a24d6 6px);border:1px solid #fff}
 .mf{display:inline-block;margin:2px 4px 0 0;padding:4px 6px;min-width:36px;text-align:center;font-weight:800;font-size:16px;border-radius:7px;background:#fbf8f0;color:#1d1a17;border:2px solid #7a3cff}
@@ -65,7 +65,7 @@ button,.card{touch-action:manipulation;cursor:pointer}
 .info{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.chip{border:2px solid var(--line);border-radius:10px;padding:5px 9px;font-size:13px;background:var(--card)}
 .chip b{font-size:20px}.chip.tbx{border-color:#22c55e;color:#16a34a;font-weight:700}.chip.abx{border-color:var(--c);box-shadow:0 0 8px var(--c)}
 .kb{position:absolute;top:-7px;right:-7px;background:#22c55e;color:#fff;border-radius:99px;width:19px;height:19px;font-size:11px;display:flex;align-items:center;justify-content:center}
-.prev{display:flex;gap:10px;align-items:center;min-height:120px;border:2px dashed var(--line);border-radius:12px;padding:8px;margin:8px 0;font-size:14px}
+.prev{display:flex;gap:10px;align-items:center;min-height:160px;border:2px dashed var(--line);border-radius:12px;padding:8px;margin:8px 0;font-size:14px}
 .turn{background:#22c55e;color:#fff;font-weight:800;border-radius:10px;padding:8px 12px;margin:8px 0;text-align:center}
 .card.tp{border-color:#22c55e;box-shadow:0 0 12px #22c55e}
 .card.ab{border-color:var(--c);box-shadow:0 0 calc(var(--t)*6px) var(--c)}
@@ -86,7 +86,43 @@ main{padding-bottom:84px}
 .acts{display:flex;gap:8px;margin:8px 0}.acts .b{flex:1;margin:0}
 .mid{text-align:center;margin:8px 0}.last{margin-top:8px}
 .card{box-shadow:0 1px 4px #0003}
+.prev .card{width:92px;height:144px;font-size:24px}
+.card.img{background-size:100% 100%!important;background-position:center!important;animation:none!important;padding:0;color:#1d1a17}
+.card.img .ix{position:absolute;left:2px;top:2px;background:#fffffff2;border-radius:6px;padding:1px 4px;font-size:13px;font-weight:800;line-height:1.1;box-shadow:0 0 2px #0006}
+.card.img.r .ix{color:var(--red)}
+.card.img small{position:absolute;left:3px;bottom:3px;background:#fffe;border-radius:6px;padding:1px 4px;font-size:10px;min-height:0}
+.card.img small:empty{display:none}
+.card.img.ab::after{content:'';position:absolute;inset:0;border-radius:7px;background:linear-gradient(120deg,transparent 40%,var(--c2) 50%,transparent 60%);background-size:250% 250%;opacity:.28;mix-blend-mode:soft-light;animation:holo 3s linear infinite;pointer-events:none}
+
+:root{--bg:#f6f1e6;--fg:#1a1412;--card:#fffdf8;--muted:#6e6458;--line:#d3c6aa;--acc:#a67c1f;--red:#b92b32}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14110f;--fg:#f3ead8;--card:#1f1a16;--muted:#a89880;--line:#3b3228;--acc:#c9a24a;--red:#e5555c}}
+body{font-family:'Oswald',system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.2px}
+h1,h2{font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;font-weight:700;letter-spacing:0}
+h1{font-size:34px}
+button.b{background:linear-gradient(180deg,#d9b45c,#a67c1f);color:#1a1412;border:2px solid #1a1412;box-shadow:0 2px 0 #1a1412;text-transform:uppercase;letter-spacing:1px;font-weight:600;border-radius:10px}
+button.b.alt{background:var(--card);color:var(--fg);border:2px solid var(--fg);box-shadow:0 2px 0 var(--fg)}
+button.b.on{outline:3px solid var(--acc)}
+input{border:2px solid var(--fg);border-radius:10px;font-family:inherit}
+.pl,.chip,.prev,.table{border-color:var(--fg)}
+.pl{border-width:2px;background:var(--card)}.pl.at{border-color:var(--red)}.pl.df{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
+.table{border-style:solid;border-width:2px;background:repeating-linear-gradient(135deg,transparent 0 10px,#0000000a 10px 11px)}
+.turn{background:linear-gradient(180deg,#d9b45c,#a67c1f);color:#1a1412;border:2px solid #1a1412;font-family:'Cormorant Garamond',Georgia,serif;font-size:20px}
+.pill{background:#1a1412;color:#f6e7bd}
+#react{background:linear-gradient(180deg,#d9b45c,#a67c1f);border:2px solid #1a1412}
+#bar button{border:2px solid var(--fg)}
+.mb{width:16px;height:24px;margin-right:-6px;border-radius:3px;background:var(--back,#333) center 20%/cover;border:1px solid var(--fg)}
+.bksm{display:inline-block;width:18px;height:26px;border-radius:3px;border:1px solid var(--fg);background:var(--back,#333) center 20%/cover;vertical-align:middle}
+.backs{display:flex;gap:12px;margin:6px 0 12px}.bk{width:64px;height:100px;border-radius:9px;border:2px solid var(--line);background-size:cover;background-position:center 20%;cursor:pointer;padding:0}.bk.on{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc)}
+
+.card.img .cost{position:absolute;top:3px;right:3px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#ecc86f,#a67c1f);filter:drop-shadow(0 0 1px #1a1412) drop-shadow(0 0 1px #1a1412) drop-shadow(0 1px 1px #0008);z-index:2}
+.card.img .cost b{font:700 13px/1 'Cormorant Garamond',Georgia,serif;color:#1a1412}
+.card.img .cost.c1{border-radius:50%}
+.card.img .cost.c2{border-radius:3px;transform:rotate(45deg);width:20px;height:20px;top:5px;right:5px}.card.img .cost.c2 b{transform:rotate(-45deg)}
+.card.img .cost.c3{clip-path:polygon(25% 4%,75% 4%,100% 50%,75% 96%,25% 96%,0 50%)}
+.card.img .cost.c4{width:28px;height:28px;top:1px;right:1px;clip-path:polygon(50% 0%,61% 20%,85% 15%,80% 39%,100% 50%,80% 61%,85% 85%,61% 80%,50% 100%,39% 80%,15% 85%,20% 61%,0% 50%,20% 39%,15% 15%,39% 20%)}
+.kb{top:auto;bottom:-7px;left:-7px;right:auto}
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Oswald:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 <div id="banner"></div>
@@ -97,11 +133,11 @@ main{padding-bottom:84px}
 <script>
 
 const SY=['♠','♥','♦','♣'],SN=['Пики','Черви','Бубны','Трефы'],RK=['2','3','4','5','6','7','8','9','10','В','Д','К','Т'];
-const DESC={dr:'сбрасываешь младшую карту',gv:'младшая карта уходит следующему',ga:'каждому по младшей карте',pn:'соперник берёт +1',pa:'все берут +1',bo:'у соперника сгорает сильнейшая карта',ba:'у всех сгорает сильнейшая',fz:'отбиться нельзя',sk:'ты ходишь снова',rv:'смена направления хода',sw:'обмен руками с соперником',tr:'козырь меняется на эту масть',lk:'способности выключены до конца раунда',ch:'+1 заряд',wd:'бьёт любую некозырную карту',rf:'атакующая карта возвращается атакующему',cap:'в раунде не больше 2 пар',ban:'соперник не может ходить своей любимой мастью',wk:'атакующая карта слабеет на 3',st:'твоя карта становится сильнее на 3',lt:'каждый отдаёт случайную карту следующему',cr:'все руки сдвигаются по кругу',eq:'карты у всех раздаются заново поровну',gm:'орёл: сброс младшей, решка: +2 карты',xc:'обмен: твоя младшая на сильнейшую соперника',rev:'две карты соперника открываются',pk:'три верхние карты колоды открываются',sh:'щит: следующий раз не берёшь карты',gy:'соперник берёт карту из сброса',ec:'повторяет прошлую способность'};
-const RAW=[['pn|Нео Нью Намбу','wd|Парирование','bo|Рикошет','cap|Стальной занавес','ban|Прицел','st|Огненный выстрел','rf|Контрудар','gy|Могильщик','ba|Град пуль','fz|Копьё','fz+bo|Любовь и мир','sk+ban|Замок-темница','tr+ba|Королевский арсенал'],
-['sh|Пластик','ch|Второе дыхание','gv|Заживление','lt|Калорийный максимум','rev|Диагностика','xc|Донорство','gm|Адреналин','ec|Регенерация','cr|Метаморфоза','pa|Эпидемия','fz+gv|Гипноз','sw|Обмен телами','eq+sh|Бессмертие'],
-['pk|Счастливый случай','wk|Мраморный грохот','ec|Мим времени','xc|Золотое прикосновение','gm|Ставка','cr|Обмен валюты','rev|Аудит','rf|Откат','sk|Перемотка','lk|Высокое благо','rev+wk|Балор','sk+gm|День получки','tr+eq|Революция'],
-['ch|Росток','st|Зелень','wk|Круши и ломай','sh|Корни','ban|Град','wd|Лоза','gv|Урожай','bo|Кружащийся клинок','ba|Миллион вольт','rv|Ветер перемен','lk|Заморозки','fz+ban|Буря','ga+tr|Гнев природы']];
+const DESC={dr:'сбрасываешь младшую карту',gv:'младшая карта уходит следующему',ga:'каждому по младшей карте',pn:'соперник берёт +1',pa:'все берут +1',bo:'у соперника сгорает сильнейшая карта',ba:'у всех сгорает сильнейшая',fz:'отбиться нельзя',sk:'ты ходишь снова',rv:'смена направления хода',sw:'обмен руками с соперником',tr:'козырь меняется на эту масть',lk:'способности выключены до конца раунда',ch:'+1 заряд',b2:'у соперника сгорают 2 сильные карты',pm:'соперник берёт +2',cd:'у соперника −1 заряд',c2:'у соперника −2 заряда',ca:'у всех остальных −1 заряд',wd:'бьёт любую некозырную карту',rf:'атакующая карта возвращается атакующему',cap:'в раунде не больше 2 пар',ban:'соперник не может ходить своей любимой мастью',wk:'атакующая карта слабеет на 3',st:'твоя карта становится сильнее на 3',lt:'каждый отдаёт случайную карту следующему',cr:'все руки сдвигаются по кругу',eq:'карты у всех раздаются заново поровну',gm:'орёл: сброс младшей, решка: +2 карты',xc:'обмен: твоя младшая на сильнейшую соперника',rev:'две карты соперника открываются',pk:'три верхние карты колоды открываются',sh:'щит: следующий раз не берёшь карты',gy:'соперник берёт карту из сброса',ec:'повторяет прошлую способность'};
+const RAW=[['pn|Выстрел','rf|Нунчаки','st|Копьё','wk|Трещина','pm|Очередь пуль','pk|Подкова','bo+cd|Взрыв','sh|Щит','ba|Град стрел','bo|Молот','fz+c2|Змеиный яд','sh+fz|Рыцарь в латах','tr+ba|Чёрный разрез'],
+['xc|Щупальце','wd|Кристалл','dr|Осыпание','ban+cd|Печать','bo+dr|Когти','ec|Хамелеон','gv|Перо','rev|Чтение мыслей','lt|Цепная связь','rev+pk|Разведчик','bo+sk|Убийца','fz+st|Берсерк','cr+sh|Вихрь сердец'],
+['gv|Подарок','sh+ch|Пузыри','gy+cd|Распад','rv|Следы','st+sk|Лестница','ch|Монета','cap|Лабиринт','cr|Водоворот','gm|Кости','sk|Ловкач','rf+sh|Зеркальный щит','fz+c2|Змеиный король','sw+tr|Обмен'],
+['ban+dr|Петля','cap+cd|Лозы','wk+rv|Порыв','lt+dr|Песчаная буря','rv+gv|Течение','pn+cd|Зелёное пламя','ch+gv|Цветение','pa|Вспышка','ba+ch|Молния','gm+gv|Яблоко','lk+c2|Цепи теней','b2+cd|Два клинка','gy+ca|Скелет']];
 const ABIL=RAW.map(a=>a.map(s=>s.split('|')));
 const dsc=e=>e.split('+').map(t=>DESC[t]).join(' · ');
 const PT=[['⚔️','💥','🔩'],['❤️','✨','💗'],['💎','⏳','🪙'],['🌿','⚡','🍃']];
@@ -112,8 +148,8 @@ const rnd=n=>Math.floor(Math.random()*n);
 
 let S=null,lastG=null,selSu=4,seenFx=-1,curGid=0,sel=null,selS=[],myIdx=-1,wasMy=false,infoC=null,selTm=0,snd=true,micS=null,vcalls={},plist=[],snap=null,isBackup=false,retry=0,chat=[],prevTb=new Set(),lastLg='',overGid=0,skew=0,everConn=false,lostFlag=false,err='',code='',myName='',peer=null,hostConn=null,isHost=false,LB=[],LN=[];
 const MAXP=8,PREF='rzkdurak-';
-const TV={dr:['💨','🗑️'],gv:['✉️','🃏'],ga:['🎁','🎁'],pn:['🃏','⬇️'],pa:['🃏','☠️'],bo:['🔥','💥'],ba:['🔥','☄️'],fz:['⛓️','🔒'],sk:['⏩','⏱️'],rv:['🔄','🌀'],sw:['🔀','🤝'],tr:['👑','🌈'],lk:['❄️','🔇'],ch:['⚡','🔋'],wd:['🛡️','⚔️'],rf:['🪞','↩️'],cap:['🚧','🔢'],ban:['🚫','🎯'],wk:['📉','💧'],st:['📈','✨'],lt:['🎲','🃏'],cr:['🎠','🔄'],eq:['⚖️','🃏'],gm:['🎰','🍀'],xc:['🤝','💱'],rev:['👁️','🔍'],pk:['🔮','✨'],sh:['🛡️','💠'],gy:['⚰️','👻'],ec:['🔁','📣']};
-const MV={dr:'u',gv:'s',ga:'s',pn:'d',pa:'d',bo:'u',ba:'u',fz:'d',sk:'s',rv:'r',sw:'s',tr:'u',lk:'d',ch:'u',wd:'r',rf:'s',cap:'d',ban:'d',wk:'d',st:'u',lt:'s',cr:'r',eq:'r',gm:'u',xc:'s',rev:'r',pk:'u',sh:'r',gy:'d',ec:'r'};
+const TV={dr:['💨','🗑️'],gv:['✉️','🃏'],ga:['🎁','🎁'],pn:['🃏','⬇️'],pa:['🃏','☠️'],bo:['🔥','💥'],ba:['🔥','☄️'],b2:['💥','🔥'],pm:['🃏','🃏'],cd:['🔋','💨'],c2:['🔋','⚡'],ca:['🔋','☠️'],fz:['⛓️','🔒'],sk:['⏩','⏱️'],rv:['🔄','🌀'],sw:['🔀','🤝'],tr:['👑','🌈'],lk:['❄️','🔇'],ch:['⚡','🔋'],wd:['🛡️','⚔️'],rf:['🪞','↩️'],cap:['🚧','🔢'],ban:['🚫','🎯'],wk:['📉','💧'],st:['📈','✨'],lt:['🎲','🃏'],cr:['🎠','🔄'],eq:['⚖️','🃏'],gm:['🎰','🍀'],xc:['🤝','💱'],rev:['👁️','🔍'],pk:['🔮','✨'],sh:['🛡️','💠'],gy:['⚰️','👻'],ec:['🔁','📣']};
+const MV={dr:'u',gv:'s',ga:'s',pn:'d',pa:'d',bo:'u',ba:'u',b2:'u',pm:'d',cd:'d',c2:'d',ca:'d',fz:'d',sk:'s',rv:'r',sw:'s',tr:'u',lk:'d',ch:'u',wd:'r',rf:'s',cap:'d',ban:'d',wk:'d',st:'u',lt:'s',cr:'r',eq:'r',gm:'u',xc:'s',rev:'r',pk:'u',sh:'r',gy:'d',ec:'r'};
 const cl=()=>location.hash.slice(1).toLowerCase().replace(/[^a-z0-9]/g,'');
 const link=()=>location.href.split('#')[0]+'#'+code;
 const getName=()=>{const n=document.getElementById('nm');return n?n.value.trim().slice(0,16):myName};
@@ -135,7 +171,7 @@ const cn=c=>RK[rk(c)]+SY[su(c)];
 function runTok(t,x){const p=x.p,o=x.o,ot=x.ot,H=S.h;
  if(t==='dr')dump(p,1);else if(t==='gv')giveTo(p,nxt(p));else if(t==='ga')ot.forEach(q=>giveTo(p,q));
  else if(t==='pn')drw(o,1);else if(t==='pa')ot.forEach(q=>drw(q,1));
- else if(t==='bo')burn(o,1);else if(t==='ba')ot.forEach(q=>burn(q,1));
+ else if(t==='bo')burn(o,1);else if(t==='cd')S.ch[o]=Math.max(0,S.ch[o]-1);else if(t==='c2')S.ch[o]=Math.max(0,S.ch[o]-2);else if(t==='ca')ot.forEach(q=>{S.ch[q]=Math.max(0,S.ch[q]-1)});else if(t==='b2')burn(o,2);else if(t==='pm')drw(o,2);else if(t==='ba')ot.forEach(q=>burn(q,1));
  else if(t==='fz'){if(p===S.at)S.fz=true}else if(t==='sk')S.sk=p;else if(t==='rv')S.dr=-S.dr;
  else if(t==='sw')[H[p],H[o]]=[H[o],H[p]];else if(t==='tr')S.tr=su(x.c);else if(t==='lk')S.lk=true;else if(t==='ch')S.ch[p]=Math.min(5,S.ch[p]+1);
  else if(t==='cap')S.cap=2;
@@ -292,16 +328,22 @@ function showFx(f){const d=document.createElement('div');d.id='fx';d.className='
  for(let i=0;i<f.k*7;i++){const q=document.createElement('i'),m=tk.length?MV[tk[i%tk.length]]||'u':'u';q.className='pt '+m;q.textContent=pool[i%pool.length];
   q.style.cssText=m==='s'?`top:${rnd(85)}%;--dx:${rnd(80)-40}px;animation-delay:${rnd(5)/10}s`:m==='r'?`left:${20+rnd(60)}%;top:${20+rnd(50)}%;animation-delay:${rnd(5)/10}s`:`left:${rnd(95)}%;--dx:${rnd(120)-60}px;animation-delay:${rnd(5)/10}s`;d.appendChild(q)}
  sfx(f.s,f.k);document.body.appendChild(d);if(f.k>1)$.classList.add('shake');setTimeout(()=>{d.remove();$.classList.remove('shake')},1900)}
-function card(c,g,cls,click,inf){const a=g.su===su(c)&&ABIL[g.su][rk(c)],k=tier(rk(c)),red=su(c)===1||su(c)===2,tp=su(c)===g.tr,tg=click||inf?'button':'div';
- return `<${tg} class="card ${red?'r':''} ${a?'ab s'+g.su+' t'+k:''} ${tp?'tp':''} ${cls||''}" ${click?`onclick="act(${c})"`:inf?`onclick="info(${c})"`:''}>${RK[rk(c)]}<i>${SY[su(c)]}</i><small>${a?(k===3?'⚡'+(rk(c)-8):'')+esc(a[1]):''}</small>${tp?'<b class="kb">К</b>':''}</${tg}>`}
+const ARTK=['2','3','4','5','6','7','8','9','10','J','Q','K','A'],SL=['s','h','d','c'];
+const ART=new Set(['s-2','s-3','s-4','s-5','s-6','s-7','s-8','s-9','s-10','s-Q','s-K','s-A','s-J','h-A','h-K','h-Q','h-J','h-10','h-9','h-8','h-7','h-6','h-4','h-3','h-2','h-5','d-A','d-K','d-Q','d-J','d-10','d-9','d-8','d-7','d-6','d-5','d-4','d-3','d-2','c-A','c-K','c-Q','c-J','c-10','c-9','c-8','c-7','c-6','c-5','c-4','c-3','c-2']);
+function card(c,g,cls,click,inf){const a=g.su===su(c)&&ABIL[g.su][rk(c)],k=tier(rk(c)),red=su(c)===1||su(c)===2,tp=su(c)===g.tr,tg=click||inf?'button':'div',key=SL[su(c)]+'-'+ARTK[rk(c)],art=ART.has(key);
+ const inner=art?`<span class="ix">${RK[rk(c)]}${SY[su(c)]}</span>${a&&k===3?`<span class="cost c${rk(c)-8}"><b>${rk(c)-8}</b></span>`:''}`:`${RK[rk(c)]}<i>${SY[su(c)]}</i><small>${a&&k===3?'⚡'+(rk(c)-8):''}</small>`;
+ return `<${tg} class="card ${art?'img':''} ${red?'r':''} ${a?'ab s'+g.su+' t'+k:''} ${tp?'tp':''} ${cls||''}"${art?` style="background-image:url(cards/${key}.jpg)"`:''} ${click?`onclick="act(${c})"`:inf?`onclick="info(${c})"`:''}>${inner}${tp?'<b class="kb">К</b>':''}</${tg}>`}
 function act(c){const g=lastG,D=nxt(g.at,g.dr,g),isDef=myIdx===D;infoC=null;
  if(selS.includes(c)){if(selS.length===1){selS=[];send({t:isDef?'def':'atk',c});return draw(lastG)}selS=selS.filter(x=>x!==c);return draw(g)}
  if(!isDef&&selS.length&&rk(selS[0])===rk(c)){selS.push(c);return draw(g)}
  selS=[c];draw(g)}
 function playSel(){const cs=selS.slice();selS=[];send({t:'atkm',cs});draw(lastG)}
 function info(c){infoC=infoC===c?null:c;selS=[];draw(lastG)}
+function applyBack(){let k='color';try{k=localStorage.getItem('rz_back')||'color'}catch(e){}document.documentElement.style.setProperty('--back','url(cards/joker-'+k+'.jpg)');return k}
+function setBack(k){try{localStorage.setItem('rz_back',k)}catch(e){}applyBack();home()}
+const backsHtml=()=>{const k=applyBack();return `<div class="tag">Рубашка карт</div><div class="backs">${['color','bw'].map(x=>`<button class="bk ${k===x?'on':''}" onclick="setBack('${x}')" style="background-image:url(cards/joker-${x}.jpg)"></button>`).join('')}</div>`};
 function home(){const hc=cl();
- $.innerHTML=`<h1>🃏 Дурак: Старшая карта</h1><p class="tag">Дурак со способностями карт. 2–8 игроков.</p>
+ $.innerHTML=`<h1>🃏 Дурак: Старшая карта</h1><p class="tag">Дурак со способностями карт. 2–8 игроков.</p>${backsHtml()}
  <input id="nm" maxlength="16" placeholder="Твоё имя" value="${esc(myName)}">${hc?`<button class="b" onclick="join()">Войти в комнату ${esc(hc)}</button>`:''}
  <button class="b ${hc?'alt':''}" onclick="create()">Создать новую комнату</button><p class="err">${esc(err)}</p>`}
 function draw(g){
@@ -320,7 +362,7 @@ function draw(g){
  const face=c=>`<span class="mf ${su(c)===1||su(c)===2?'r':''} ${su(c)===g.tr?'tp':''}">${cn(c)}</span>`;
  const mini=i=>{if(i===mi)return '';const H=g.h[i],f=H.filter(c=>c>=0),b=H.length-f.length;return `<div class="mini">${f.map(face).join('')}${'<span class="mb"></span>'.repeat(b)}</div>`};
  const open=g.dk.filter(c=>c>=0),red=g.tr===1||g.tr===2;
- h+=`<div class="info"><div class="chip">🂠 <b>${g.dk.length}</b></div><div class="chip tbx">козырь <b${red?' style="color:var(--red)"':''}>${SY[g.tr]}</b></div><div class="chip abx s${g.su}">✨ <b>${SY[g.su]}</b> ${SN[g.su]}</div>${g.tm&&g.dl&&play?'<div class="chip">⏱ <b id="tmr"></b></div>':''}${g.dr<0?'<div class="chip">↺</div>':''}${g.lk?'<div class="chip">🔇</div>':''}${g.bn?`<div class="chip">🚫 ${SY[g.bn.s]}</div>`:''}</div>${open.length?`<div class="tag">Открыты в колоде: ${open.map(face).join('')}</div>`:''}${mi<0?'<div class="tag">👀 ты зритель</div>':''}`;
+ h+=`<div class="info"><div class="chip"><span class="bksm"></span> <b>${g.dk.length}</b></div><div class="chip tbx">козырь <b${red?' style="color:var(--red)"':''}>${SY[g.tr]}</b></div><div class="chip abx s${g.su}">✨ <b>${SY[g.su]}</b> ${SN[g.su]}</div>${g.tm&&g.dl&&play?'<div class="chip">⏱ <b id="tmr"></b></div>':''}${g.dr<0?'<div class="chip">↺</div>':''}${g.lk?'<div class="chip">🔇</div>':''}${g.bn?`<div class="chip">🚫 ${SY[g.bn.s]}</div>`:''}</div>${open.length?`<div class="tag">Открыты в колоде: ${open.map(face).join('')}</div>`:''}${mi<0?'<div class="tag">👀 ты зритель</div>':''}`;
  h+=`<div class="plist">${g.nm.map((n,i)=>`<div class="pl ${i===g.at?'at':''} ${i===D?'df':''} ${g.out.includes(i)?'out':''}">${play&&i===g.at?'⚔️ ':play&&i===D?'🛡 ':''}${esc(n)}${i===mi?' (ты)':''}${g.lv.includes(i)?' (вышел)':''}${(g.off||[]).includes(i)?' (нет связи)':''}${(g.ps||[]).includes(i)?' ✅':''}<br><b>${g.h[i].length}</b> 🃏 · ⚡${g.ch[i]}${mini(i)}</div>`).join('')}</div>`;
  h+=`<div class="table">${g.tb.length?g.tb.map(([a,d,b])=>`<div class="pair ${prevTb.has(a)&&(d<0||prevTb.has(d))?'':'in'}">${card(a,g,'',false,true)}${d>=0?card(d,g,'',false,true):''}${b?`<span class="pill" style="position:absolute;top:-8px;right:-6px">${b>0?'+':''}${b}</span>`:''}</div>`).join(''):'<span class="tag">Стол пуст</span>'}</div>`;
  prevTb=new Set(g.tb.flatMap(x=>[x[0],x[1]]));
@@ -340,10 +382,8 @@ function draw(g){
  if(pc===null||pc===undefined)h+=`<div class="prev"><span class="tag">Нажми на карту, чтобы увидеть её способность</span></div>`;
  else{const ab=g.su===su(pc)&&ABIL[g.su][rk(pc)];h+=`<div class="prev">${card(pc,g)}<div><b>${cn(pc)}</b>${su(pc)===g.tr?' · козырь':''}<br>${ab?`<b>${esc(ab[1])}</b>: ${dsc(ab[0])}${tier(rk(pc))===3?' · стоит ⚡'+(rk(pc)-8):''}`:'обычная карта'}${can&&selS.length===1?`<br><button class="b" onclick="act(${pc})">Сыграть</button>`:can&&selS.length>1?`<br><b>Выбрано:</b> ${selS.map(cn).join(' ')}<br><button class="b" onclick="playSel()">Сыграть все (${selS.length})</button>`:''}</div></div>`}
  if(mi>=0)h+=`<div class="hand">${hand.map(c=>card(c,g,selS.includes(c)?'sel':'',can,!can)).join('')}</div>`;
- const lgs=(g.lg||[]).slice().reverse();
- h+=`<div class="tag last">${lgs.length?esc(lgs[0]):''}</div><details><summary class="tag">Журнал</summary><div class="tag">${lgs.map(esc).join('<br>')}</div></details>`;
  $.innerHTML=h;window.scrollTo(0,y)}
-home();
+applyBack();home();
 document.addEventListener('pointerdown',()=>ac(),{once:true});
 setInterval(tickTimers,500);
 try{if(!localStorage.getItem('rz_help')){showHelp();localStorage.setItem('rz_help','1')}}catch(e){}
