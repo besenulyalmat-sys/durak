@@ -121,6 +121,20 @@ input{border:2px solid var(--fg);border-radius:10px;font-family:inherit}
 .card.img .cost.c3{clip-path:polygon(25% 4%,75% 4%,100% 50%,75% 96%,25% 96%,0 50%)}
 .card.img .cost.c4{width:28px;height:28px;top:1px;right:1px;clip-path:polygon(50% 0%,61% 20%,85% 15%,80% 39%,100% 50%,80% 61%,85% 85%,61% 80%,50% 100%,39% 80%,15% 85%,20% 61%,0% 50%,20% 39%,15% 15%,39% 20%)}
 .kb{top:auto;bottom:-7px;left:-7px;right:auto}
+
+.card.tp{border-color:#f08a24;box-shadow:0 0 12px 2px #f08a24}
+.card.ab{border-color:var(--c);box-shadow:0 0 calc(var(--t)*5px) calc(var(--t)*1px) var(--c)}
+.card.ab.s0{box-shadow:0 0 0 1px #fff9,0 0 calc(var(--t)*5px) calc(var(--t)*1.5px) #000}
+.s0{--c:#000}
+.chip.tbx{border-color:#f08a24;color:#c2610a}.mf.tp{border-color:#f08a24}
+.hand{gap:6px}
+.hand .card{width:min(86px,calc((100% - 24px)/5));height:auto;aspect-ratio:787/1228}
+.pair{width:104px;height:146px}.table .card{width:80px;height:125px}.pair .card:nth-child(2){left:22px;top:20px}
+.prev .card{width:100px;height:156px}.prev{min-height:176px}
+button.b{padding:9px 12px;font-size:14px;margin:4px 0}
+.suits .b{font-size:20px;padding:6px}
+#bar button{font-size:16px;padding:4px 9px}
+#react{width:44px;height:44px;font-size:22px}#stk button{font-size:24px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Oswald:wght@400;600&display=swap" rel="stylesheet">
 </head>
@@ -307,7 +321,7 @@ function voiceSync(){if(!micS||!peer||!peer.id)return;for(const id of plist){if(
 /* help */
 function showHelp(){if($e('help'))return;const d=document.createElement('div');d.id='help';d.innerHTML=`<div class="box"><h2>Как играть</h2><ul>
 <li><b>Цель:</b> избавиться от всех карт. Последний с картами — дурак.</li>
-<li><b>Ход:</b> атакующий кладёт карту, защищающийся бьёт её старшей картой той же масти или козырем (значок К, зелёное свечение).</li>
+<li><b>Ход:</b> атакующий кладёт карту, защищающийся бьёт её старшей картой той же масти или козырем (оранжевое свечение).</li>
 <li>Не можешь или не хочешь отбиваться — «Взять карты». Остальные тогда могут подкинуть карты тех же значений.</li>
 <li><b>Бито:</b> когда все пары отбиты, каждый, кроме защищающегося, нажимает «Бито». Раунд закончится, когда спасуют все.</li>
 <li><b>Способности</b> есть у карт выбранной масти (цветное свечение). Нажми на карту, чтобы прочитать её способность, и ещё раз, чтобы сыграть.</li>
@@ -331,8 +345,8 @@ function showFx(f){const d=document.createElement('div');d.id='fx';d.className='
 const ARTK=['2','3','4','5','6','7','8','9','10','J','Q','K','A'],SL=['s','h','d','c'];
 const ART=new Set(['s-2','s-3','s-4','s-5','s-6','s-7','s-8','s-9','s-10','s-Q','s-K','s-A','s-J','h-A','h-K','h-Q','h-J','h-10','h-9','h-8','h-7','h-6','h-4','h-3','h-2','h-5','d-A','d-K','d-Q','d-J','d-10','d-9','d-8','d-7','d-6','d-5','d-4','d-3','d-2','c-A','c-K','c-Q','c-J','c-10','c-9','c-8','c-7','c-6','c-5','c-4','c-3','c-2']);
 function card(c,g,cls,click,inf){const a=g.su===su(c)&&ABIL[g.su][rk(c)],k=tier(rk(c)),red=su(c)===1||su(c)===2,tp=su(c)===g.tr,tg=click||inf?'button':'div',key=SL[su(c)]+'-'+ARTK[rk(c)],art=ART.has(key);
- const inner=art?`<span class="ix">${RK[rk(c)]}${SY[su(c)]}</span>${a&&k===3?`<span class="cost c${rk(c)-8}"><b>${rk(c)-8}</b></span>`:''}`:`${RK[rk(c)]}<i>${SY[su(c)]}</i><small>${a&&k===3?'⚡'+(rk(c)-8):''}</small>`;
- return `<${tg} class="card ${art?'img':''} ${red?'r':''} ${a?'ab s'+g.su+' t'+k:''} ${tp?'tp':''} ${cls||''}"${art?` style="background-image:url(cards/${key}.jpg)"`:''} ${click?`onclick="act(${c})"`:inf?`onclick="info(${c})"`:''}>${inner}${tp?'<b class="kb">К</b>':''}</${tg}>`}
+ const inner=art?``:`${RK[rk(c)]}<i>${SY[su(c)]}</i><small>${a&&k===3?'⚡'+(rk(c)-8):''}</small>`;
+ return `<${tg} class="card ${art?'img':''} ${red?'r':''} ${a?'ab s'+g.su+' t'+k:''} ${tp?'tp':''} ${cls||''}"${art?` style="background-image:url(cards/${key}.jpg)"`:''} ${click?`onclick="act(${c})"`:inf?`onclick="info(${c})"`:''}>${inner}</${tg}>`}
 function act(c){const g=lastG,D=nxt(g.at,g.dr,g),isDef=myIdx===D;infoC=null;
  if(selS.includes(c)){if(selS.length===1){selS=[];send({t:isDef?'def':'atk',c});return draw(lastG)}selS=selS.filter(x=>x!==c);return draw(g)}
  if(!isDef&&selS.length&&rk(selS[0])===rk(c)){selS.push(c);return draw(g)}
