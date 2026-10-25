@@ -338,8 +338,8 @@ function pub(){clean();stamp();for(const e of LB){const v=V(e.idx);if(e.c)e.c.se
 function bLobby(){LN=LB.map(e=>e.name);for(const e of LB)if(e.c)e.c.send({t:'lobby',names:LN});if(!S)draw(null)}
 function bPl(){plist=[peer.id,...LB.filter(e=>e.c).map(e=>e.c.peer)];LB.forEach(e=>e.c&&e.c.send({t:'pl',ids:plist}));voiceSync()}
 function setupCalls(){peer.on('call',call=>{call.answer(micS||undefined);call.on('stream',attach)})}
-function openHost(first){peer=new Peer(PREF+code);setupCalls();
- peer.on('open',()=>{isHost=true;retry=0;banner('');saveLast();$e('chatbox').style.display='block';
+function openHost(first){peer=new Peer(PREF+code,peerOpts());if(first)connT=setTimeout(()=>{if(!isHost){err='Нет связи с сервером соединений. Проверь интернет и попробуй ещё раз.';try{peer.destroy()}catch(e){}home()}},12000);setupCalls();
+ peer.on('open',()=>{clearTimeout(connT);isHost=true;retry=0;banner('');saveLast();$e('chatbox').style.display='block';
   if(first){LB=[{c:null,name:myName,uid,idx:0}];S=null;lastG=null}
   else{ROOMKEY=newKey();LOCKED=true;S=snap;const mi=S?S.uid.indexOf(uid):-1;LB=[{c:null,name:myName,uid,idx:mi}];if(S){S.off=[...Array(S.n).keys()].filter(i=>i!==mi&&!S.lv.includes(i)&&!(S.bot&&S.bot[i]));S.off.forEach(i=>setTimeout(()=>offGrace(i),120000))}}
   bLobby();bPl();if(S)pub();else draw(null)});
@@ -358,18 +358,18 @@ function offGrace(i){if(S&&S.ph==='play'&&S.off.includes(i)&&alive(i)){S.off=S.o
 function drop(c){const k=LB.findIndex(x=>x.c===c);if(k<0)return;const e=LB.splice(k,1)[0];bPl();
  if(S&&e.idx>=0&&S.ph==='play'&&alive(e.idx)){if(!S.off.includes(e.idx))S.off.push(e.idx);setTimeout(()=>offGrace(e.idx),120000);pub()}
  else bLobby()}
-function joinGame(){peer=new Peer();setupCalls();
- peer.on('open',()=>connectHost());
+function joinGame(){peer=new Peer(undefined,peerOpts());setupCalls();banner('Связь с сервером…');connT=setTimeout(()=>diag('srv'),12000);
+ peer.on('open',()=>{clearTimeout(connT);banner('Ищу комнату…');connectHost();connT=setTimeout(()=>{if(!everConn)diag('ice')},18000)});
  peer.on('error',e=>{if(e.type==='peer-unavailable'){if(everConn||retry>0){retryConnect();return}err='Комната не найдена. Хост должен быть в игре, проверь ссылку.';home();return}err='Ошибка сети: '+e.type;home()})}
 function connectHost(){hostConn=peer.connect(PREF+code,{reliable:true});
- hostConn.on('open',()=>{everConn=true;retry=0;banner('');$e('chatbox').style.display='block';hostConn.send({t:'hello',name:myName,uid,key:joinKey})});
+ hostConn.on('open',()=>{clearTimeout(connT);everConn=true;retry=0;banner('');$e('chatbox').style.display='block';hostConn.send({t:'hello',name:myName,uid,key:joinKey})});
  hostConn.on('data',guestMsg);hostConn.on('close',lost);hostConn.on('error',lost)}
 function retryConnect(){if(retry++<80){banner('Переподключаюсь… ('+retry+')');setTimeout(()=>{if(!isHost&&!kickedFlag)connectHost()},3000)}else{banner('');err='Связь с хостом потеряна.';home()}}
-function lost(){if(isHost||lostFlag||kickedFlag)return;lostFlag=true;setTimeout(()=>{lostFlag=false},600);
+function lost(){if(isHost||lostFlag||kickedFlag)return;if(!everConn&&!isBackup){diag('ice');return}lostFlag=true;setTimeout(()=>{lostFlag=false},600);
  if(isBackup&&snap){banner('Хост пропал: беру комнату на себя…');setTimeout(()=>{try{peer.destroy()}catch(e){}openHost(false)},1500)}else retryConnect()}
 function guestMsg(d){if(!d)return;if(d.t==='denied'){kickedFlag=true;banner('');err=d.why||'Вход запрещён.';try{hostConn.close()}catch(e){}home();return}if(d.t==='closed'){try{localStorage.removeItem('rz_last')}catch(e){}kickedFlag=true;banner('');err='Хозяин закрыл комнату.';try{hostConn.close()}catch(e){}home();return}if(d.t==='kicked'){try{localStorage.removeItem('rz_last')}catch(e){}kickedFlag=true;banner('');err='Хозяин удалил тебя из комнаты.';try{hostConn.close()}catch(e){}home();return}banner('');if((d.t==='lobby'||d.t==='view')&&!sv){sv=true;saveLast()}if(d.t==='lobby'){LN=d.names;if(!lastG)draw(null)}else if(d.t==='view')render(d.g);else if(d.t==='snap'){snap=d.S;isBackup=true}else if(d.t==='pl'){plist=d.ids;voiceSync()}else if(d.t==='msg')onMsg(d)}
 function create(){if(!isOwner){err='Создавать комнаты может только хозяин игры.';return home()}myName=getName();if(!myName){err='Введи имя.';return home()}code=Math.random().toString(36).slice(2,7);err='Создаю комнату…';home();ROOMKEY=newKey();KEYEXP=Date.now()+30*60*1000;LOCKED=false;history.replaceState(null,'','#'+code+'.'+ROOMKEY);openHost(true)}
-function join(){kickedFlag=false;joinKey=ckey();sv=false;{const L=getLast();if(L&&L.code===cl()){uid=L.uid;try{sessionStorage.setItem('rz_uid',uid)}catch(e){}}}myName=getName();code=cl();if(!myName||!code){err='Нужно имя и ссылка с кодом комнаты.';return home()}err='Подключаюсь…';home();joinGame()}
+function join(){kickedFlag=false;everConn=false;joinKey=ckey();sv=false;{const L=getLast();if(L&&L.code===cl()){uid=L.uid;try{sessionStorage.setItem('rz_uid',uid)}catch(e){}}}myName=getName();code=cl();if(!myName||!code){err='Нужно имя и ссылка с кодом комнаты.';return home()}err='Подключаюсь…';home();joinGame()}
 function send(m){if(isHost){const me=LB.find(e=>!e.c);apply(me?me.idx:0,m)}else if(hostConn)hostConn.send({t:'mv',m})}
 function copyLink(){try{navigator.clipboard.writeText(link()).then(()=>{const c=$e('cp');if(c)c.textContent='Скопировано ✅'})}catch(e){const l=$e('lk');if(l)l.select()}}
 function render(g){lastG=g;try{document.body.classList.toggle('chaos',!!g.cm)}catch(e){}skew=g.now-Date.now();
@@ -567,7 +567,7 @@ function kickConn(e){BAN.add(e.uid);try{e.c.send({t:'kicked'})}catch(x){}
 function kickEntry(i){const e=LB[i];if(!isHost||!e||!e.c||!confirm('Удалить игрока «'+e.name+'»?'))return;kickConn(e)}
 function kickPlayer(i){const e=LB.find(x=>x.idx===i&&x.c);if(!isHost||!e||!confirm('Удалить игрока «'+e.name+'»?'))return;kickConn(e)}
 const specHtml=()=>{const sp=LB.map((e,k)=>[e,k]).filter(([e])=>e.c&&e.idx<0);return sp.length?`<div class="tag">Зрители: ${sp.map(([e,k])=>esc(e.name)+` <button class="kick" onclick="kickEntry(${k})">✕</button>`).join(' · ')}</div>`:''};
-const VER='25.10 15:40 · подкидывают соседи';function ownerOff(){try{localStorage.removeItem('rz_owner')}catch(e){}isOwner=false;home()}
+const VER='25.10 17:44 · проверка связи';function ownerOff(){try{localStorage.removeItem('rz_owner')}catch(e){}isOwner=false;home()}
 let ROOMKEY='',KEYEXP=0,LOCKED=false;const newKey=()=>Math.random().toString(36).slice(2,10);
 function admit(d){const u=String(d.uid||'');if(findIdx(d)>=0)return null;
  if(LOCKED)return 'Вход в комнату закрыт хозяином.';
@@ -602,11 +602,25 @@ function animateNew(oldTb){const g=lastG;if(!g)return;const fresh=g.gid!==dealGi
 function findIdx(d){if(!S||!S.uid)return -1;const u=String(d.uid||'');let i=S.uid.indexOf(u);if(i>=0&&!S.lv.includes(i))return i;const nm=String(d.name||'').trim().toLowerCase();return S.nm.findIndex((n,k)=>n.toLowerCase()===nm&&S.off.includes(k)&&!S.lv.includes(k))}
 function saveLast(){try{localStorage.setItem('rz_last',JSON.stringify({code,key:isHost?ROOMKEY:joinKey,name:myName,uid,t:Date.now()}))}catch(e){}}
 function getLast(){try{const r=JSON.parse(localStorage.getItem('rz_last')||'null');return r&&Date.now()-r.t<8*3600*1000?r:null}catch(e){return null}}
-function rejoin(){const r=getLast();if(!r)return;code=r.code;myName=r.name;uid=r.uid;try{sessionStorage.setItem('rz_uid',uid)}catch(e){}joinKey=r.key||'';kickedFlag=false;sv=false;err='Подключаюсь…';home();joinGame()}
+function rejoin(){const r=getLast();if(!r)return;code=r.code;myName=r.name;uid=r.uid;try{sessionStorage.setItem('rz_uid',uid)}catch(e){}joinKey=r.key||'';kickedFlag=false;everConn=false;sv=false;err='Подключаюсь…';home();joinGame()}
+const EXTRA_ICE=[]; /* сюда можно добавить свой TURN: {urls:'turn:адрес:порт',username:'...',credential:'...'} */
+const peerOpts=()=>EXTRA_ICE.length?{config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:global.stun.twilio.com:3478'},{urls:'turn:eu-0.turn.peerjs.com:3478',username:'peerjs',credential:'peerjsp'},{urls:'turn:us-0.turn.peerjs.com:3478',username:'peerjs',credential:'peerjsp'},...EXTRA_ICE]}}:{};
+let connT=0;
+function diag(kind){clearTimeout(connT);kickedFlag=true;try{peer.destroy()}catch(e){}banner('');
+ err=kind==='srv'?'Нет связи с сервером соединений. Проверь интернет, выключи VPN, попробуй другую сеть (Wi‑Fi или мобильную).':'Комната найдена, но прямое соединение не установилось. Так бывает в мобильных сетях и за строгими роутерами. Попробуй другую сеть (Wi‑Fi вместо мобильной или наоборот), выключи VPN. Кнопка «Проверить соединение» ниже подскажет причину.';home()}
+async function netTest(){const d=document.createElement('div');d.id='nt';d.className='ovl';d.innerHTML=`<div class="box"><h2>Проверка соединения</h2><div id="ntr" class="tag">Проверяю… (до 15 секунд)</div><button class="b" onclick="document.getElementById('nt').remove()">Закрыть</button></div>`;document.body.appendChild(d);
+ const out=[];
+ const srv=await new Promise(res=>{let done=false;const t=setTimeout(()=>{if(!done){done=true;res(false)}},8000);try{const p=new Peer(undefined,peerOpts());p.on('open',()=>{if(!done){done=true;clearTimeout(t);res(true)}try{p.destroy()}catch(e){}});p.on('error',()=>{if(!done){done=true;clearTimeout(t);res(false)}})}catch(e){res(false)}});
+ out.push(srv?'✅ Сервер соединений доступен':'❌ Нет связи с сервером соединений (PeerJS)');
+ const types=await new Promise(res=>{const ts=new Set();let pc;try{pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:global.stun.twilio.com:3478'},{urls:'turn:eu-0.turn.peerjs.com:3478',username:'peerjs',credential:'peerjsp'},{urls:'turn:us-0.turn.peerjs.com:3478',username:'peerjs',credential:'peerjsp'},...EXTRA_ICE]})}catch(e){res(null);return}
+  pc.createDataChannel('x');pc.onicecandidate=e=>{if(e.candidate){const m=/ typ (\w+)/.exec(e.candidate.candidate);if(m)ts.add(m[1])}else{try{pc.close()}catch(x){}res(ts)}};pc.createOffer().then(o=>pc.setLocalDescription(o)).catch(()=>res(null));setTimeout(()=>{try{pc.close()}catch(x){}res(ts)},9000)});
+ if(!types)out.push('❌ Браузер не поддерживает прямое соединение (WebRTC)');
+ else{out.push(types.has('srflx')?'✅ Внешний адрес определяется (STUN работает)':'⚠️ Внешний адрес не определился (STUN недоступен)');out.push(types.has('relay')?'✅ Ретранслятор (TURN) работает: соединение пойдёт даже через строгую сеть':'⚠️ Ретранслятор (TURN) недоступен: в строгих мобильных сетях соединение может не установиться')}
+ const r=$e('ntr');if(r)r.innerHTML=out.map(esc).join('<br>')+'<p class="tag">Если у тебя всё ✅, а у друга нет, проблема в его сети. Попроси его сделать такую же проверку и прислать результат.</p>'}
 function home(){const hc=cl();
  $.innerHTML=`<h1>🃏 Дурак: Старшая карта</h1><p class="tag">Дурак со способностями карт. 2–8 игроков.</p>${backsHtml()}${themeHtml()}
  <input id="nm" maxlength="16" placeholder="Твоё имя" value="${esc(myName)}">${hc?`<button class="b" onclick="join()">Войти в комнату ${esc(hc)}</button>`:(getLast()?`<button class="b" onclick="rejoin()">↩ Вернуться в комнату ${esc(getLast().code)}</button>`:'')}
- ${isOwner?`<button class="b ${hc?'alt':''}" onclick="create()">Создать новую комнату</button><p class="tag">👑 Режим хозяина · <a href="#" onclick="ownerOff();return false">выйти</a></p>`:(hc?'':'<p class="tag">Чтобы сыграть, открой ссылку-приглашение от хозяина игры.</p>')}<p class="err">${esc(err)}</p><p class="tag" style="opacity:.55;font-size:11px">версия ${VER}</p>`}
+ ${isOwner?`<button class="b ${hc?'alt':''}" onclick="create()">Создать новую комнату</button><p class="tag">👑 Режим хозяина · <a href="#" onclick="ownerOff();return false">выйти</a></p>`:(hc?'':'<p class="tag">Чтобы сыграть, открой ссылку-приглашение от хозяина игры.</p>')}<p class="err">${esc(err)}</p><button class="b alt" onclick="netTest()">🔧 Проверить соединение</button><p class="tag" style="opacity:.55;font-size:11px">версия ${VER}</p>`}
 function draw(g){
  const mi=g?g.you:-1;myIdx=mi;let h='';
  if(!g){
