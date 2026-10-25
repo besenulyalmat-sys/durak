@@ -207,12 +207,13 @@ function botTick(){if(!isHost||!S||S.ph!=='play'||!S.bot)return;
    if(!pick.length&&S.opts&&S.opts.tf&&!S.tb.some(x=>x[1]>=0))sorted(i).filter(c=>rk(c)===rk(a)&&!JK(c)).slice(0,2).forEach(c=>mv.push({t:'trf',c}));
    mv.push({t:'take'});attempt(i,mv);return}
   if(i===S.at&&!S.tb.length){attempt(i,sorted(i).slice(0,4).map(c=>({t:'atk',c})));return}
-  if(S.tb.length&&(S.tk||allD)&&!S.ps.includes(i)&&(S.opts.th||i===S.at)){
+  if(S.tb.length&&(S.tk||allD)&&!S.ps.includes(i)&&canThrowIn(S,i)){
    const ranks=new Set(S.tb.flatMap(x=>x[1]>=0?[rk(x[0]),rk(x[1])]:[rk(x[0])]));
    const c=sorted(i).find(c=>ranks.has(rk(c))&&su(c)!==S.tr&&!JK(c)),mv=[];
    if(c!==undefined&&Math.random()<.45)mv.push({t:'atk',c});mv.push({t:'done'});attempt(i,mv);return}}}
 
 const abOf=(c,g)=>JK(c)?JKAB:g.cm?(g.cm[rk(c)]===su(c)?ABIL[su(c)][rk(c)]:null):(g.su===su(c)?ABIL[g.su][rk(c)]:null);
+function canThrowIn(g,p){const o=g.opts||{th:true};const D=nxt(g.at,g.dr,g);if(p===D)return false;if(p===g.at)return true;if(!o.th)return false;if(o.nb)return p===nxt(D,g.dr,g);return true}
 function canBeat(g,c){const k=g.tb.findIndex(x=>x[1]<0);return k>=0&&beats(g.tb[k][0],c,g.tr,g.tb[k][2]||0)}
 function canTrf(g,c){if(!g.opts||!g.opts.tf||g.tk||g.fz||!g.tb.length||g.tb.some(x=>x[1]>=0)||g.tb.some(x=>rk(x[0])!==rk(c)))return false;const D=nxt(g.at,g.dr,g),nD=nxt(D,g.dr,g);return nD!==D&&g.h[nD].length>=g.tb.length+1}
 function trfSel(){const c=selS[0];selS=[];send({t:'trf',c});draw(lastG)}
@@ -220,7 +221,7 @@ let curTheme='1';
 function applyTheme(){let t='r';try{t=localStorage.getItem('rz_theme')||'r'}catch(e){}if(t==='r')t=String(1+rnd(3));curTheme=t;try{document.body.classList.remove('th1','th2','th3');document.body.classList.add('th'+t)}catch(e){}}
 function setTheme(t){try{localStorage.setItem('rz_theme',t)}catch(e){}applyTheme();home()}
 const themeHtml=()=>{let t='r';try{t=localStorage.getItem('rz_theme')||'r'}catch(e){}return `<div class="tag">Оформление</div><div class="themes">${[['r','🎲 Случайно'],['1','Пергамент'],['2','Сукно'],['3','Ночь']].map(([k,n])=>`<button class="${t===k?'on':''}" onclick="setTheme('${k}')">${n}</button>`).join('')}</div>`};
-const optsHtml=cb=>`<div class="tag">Режим</div><div class="suits" style="grid-template-columns:repeat(3,1fr)">${[['Обычный',0],['🌀 Хаос',1],['🃏 Джокеры',2]].map(([n,v])=>`<button class="b alt ${selMode===v?'on':''}" onclick="selMode=${v};${cb}">${n}</button>`).join('')}</div><div class="tag">Колода</div><div class="suits" style="grid-template-columns:repeat(2,1fr)">${[['52 карты',1],['104 карты',2]].map(([n,v])=>`<button class="b alt ${selDecks===v?'on':''}" onclick="selDecks=${v};${cb}">${n}</button>`).join('')}</div><div class="tag">Боты (компьютер)</div><div class="suits" style="grid-template-columns:repeat(4,1fr)">${[0,1,2,3].map(v=>`<button class="b alt ${botN===v?'on':''}" onclick="botN=${v};${cb}">${v}</button>`).join('')}</div><div class="tag">Правила</div><div class="suits" style="grid-template-columns:repeat(2,1fr)"><button class="b alt ${optTf?'on':''}" onclick="optTf=!optTf;${cb}">Перевод: ${optTf?'вкл':'выкл'}</button><button class="b alt ${optTh?'on':''}" onclick="optTh=!optTh;${cb}">${optTh?'Подкидывают все':'Только атакующий'}</button></div>`;
+const optsHtml=cb=>`<div class="tag">Режим</div><div class="suits" style="grid-template-columns:repeat(3,1fr)">${[['Обычный',0],['🌀 Хаос',1],['🃏 Джокеры',2]].map(([n,v])=>`<button class="b alt ${selMode===v?'on':''}" onclick="selMode=${v};${cb}">${n}</button>`).join('')}</div><div class="tag">Колода</div><div class="suits" style="grid-template-columns:repeat(2,1fr)">${[['52 карты',1],['104 карты',2]].map(([n,v])=>`<button class="b alt ${selDecks===v?'on':''}" onclick="selDecks=${v};${cb}">${n}</button>`).join('')}</div><div class="tag">Боты (компьютер)</div><div class="suits" style="grid-template-columns:repeat(4,1fr)">${[0,1,2,3].map(v=>`<button class="b alt ${botN===v?'on':''}" onclick="botN=${v};${cb}">${v}</button>`).join('')}</div><div class="tag">Правила</div><div class="suits" style="grid-template-columns:repeat(1,1fr)"><button class="b alt ${optTf?'on':''}" onclick="optTf=!optTf;${cb}">Перевод: ${optTf?'вкл':'выкл'}</button></div><div class="tag">Кто подкидывает</div><div class="suits" style="grid-template-columns:repeat(3,1fr)">${[['Все',0],['Соседи',1],['Атакующий',2]].map(([n,v])=>`<button class="b alt ${thMode===v?'on':''}" onclick="thMode=${v};${cb}">${n}</button>`).join('')}</div><p class="tag">«Соседи»: подкидывать могут только атакующий и игрок, который ходит после защищающегося.</p>`;
 
 const dsc=e=>e.split('+').map(t=>DESC[t]).join(' · ');
 const PT=[['⚔️','💥','🔩'],['❤️','✨','💗'],['💎','⏳','🪙'],['🌿','⚡','🍃']];
@@ -229,7 +230,7 @@ const $=document.getElementById('app');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const rnd=n=>Math.floor(Math.random()*n);
 
-let S=null,lastG=null,selSu=4,seenFx=-1,curGid=0,sel=null,selS=[],myIdx=-1,wasMy=false,infoC=null,selTm=0,selMode=0,selDecks=1,optTf=false,optTh=true,botN=0,snd=true,micS=null,vcalls={},plist=[],snap=null,isBackup=false,retry=0,chat=[],prevTb=new Set(),lastLg='',overGid=0,skew=0,everConn=false,lostFlag=false,err='',code='',myName='',peer=null,hostConn=null,isHost=false,LB=[],LN=[];
+let S=null,lastG=null,selSu=4,seenFx=-1,curGid=0,sel=null,selS=[],myIdx=-1,wasMy=false,infoC=null,selTm=0,selMode=0,selDecks=1,optTf=false,optTh=true,thMode=0,botN=0,snd=true,micS=null,vcalls={},plist=[],snap=null,isBackup=false,retry=0,chat=[],prevTb=new Set(),lastLg='',overGid=0,skew=0,everConn=false,lostFlag=false,err='',code='',myName='',peer=null,hostConn=null,isHost=false,LB=[],LN=[];
 const MAXP=8,PREF='rzkdurak-';
 const TV={dr:['💨','🗑️'],gv:['✉️','🃏'],ga:['🎁','🎁'],pn:['🃏','⬇️'],pa:['🃏','☠️'],bo:['🔥','💥'],ba:['🔥','☄️'],b2:['💥','🔥'],pm:['🃏','🃏'],cd:['🔋','💨'],c2:['🔋','⚡'],ca:['🔋','☠️'],fz:['⛓️','🔒'],sk:['⏩','⏱️'],rv:['🔄','🌀'],sw:['🔀','🤝'],tr:['👑','🌈'],lk:['❄️','🔇'],ch:['⚡','🔋'],wd:['🛡️','⚔️'],rf:['🪞','↩️'],cap:['🚧','🔢'],ban:['🚫','🎯'],wk:['📉','💧'],st:['📈','✨'],lt:['🎲','🃏'],cr:['🎠','🔄'],eq:['⚖️','🃏'],gm:['🎰','🍀'],xc:['🤝','💱'],rev:['👁️','🔍'],pk:['🔮','✨'],sh:['🛡️','💠'],gy:['⚰️','👻'],ec:['🔁','📣']};
 const MV={dr:'u',gv:'s',ga:'s',pn:'d',pa:'d',bo:'u',ba:'u',b2:'u',pm:'d',cd:'d',c2:'d',ca:'d',fz:'d',sk:'s',rv:'r',sw:'s',tr:'u',lk:'d',ch:'u',wd:'r',rf:'s',cap:'d',ban:'d',wk:'d',st:'u',lt:'s',cr:'r',eq:'r',gm:'u',xc:'s',rev:'r',pk:'u',sh:'r',gy:'d',ec:'r'};
@@ -299,12 +300,12 @@ function lg(t){S.lg.push(t);if(S.lg.length>8)S.lg.shift()}
 function clean(){S.vc=S.vc.map((v,i)=>v.filter(c=>S.h[i].includes(c)));S.pk=S.pk.filter(c=>S.dk.includes(c))}
 function apply(p,m){if(!S||S.ph!=='play'||!alive(p))return;const D=nxt(S.at),H=S.h;
  if(m.t==='atk'){if(!H[p].includes(m.c)||p===D||(S.bn&&S.bn.by!==p&&su(m.c)===S.bn.s))return;
-  if(!S.tb.length){if(p!==S.at)return}else if(p!==S.at&&S.opts&&!S.opts.th)return;else if(!S.tb.some(x=>rk(x[0])===rk(m.c)||(x[1]>=0&&rk(x[1])===rk(m.c))))return;
+  if(!S.tb.length){if(p!==S.at)return}else if(!canThrowIn(S,p))return;else if(!S.tb.some(x=>rk(x[0])===rk(m.c)||(x[1]>=0&&rk(x[1])===rk(m.c))))return;
   if(S.tb.length>=(S.cap||6)||S.tb.filter(x=>x[1]<0).length>=H[D].length)return;
   const bk=JSON.stringify({...S,bk:null});rem(p,m.c);S.tb.push([m.c,-1,0]);lg(S.nm[p]+' атакует '+cn(m.c));trig(p,m.c);trap(p);S.ps=[];S.bk=JSON.parse(bk);S.lm=p}
  else if(m.t==='atkm'){const cs=Array.isArray(m.cs)?[...new Set(m.cs)]:[];if(cs.length<2||cs.length>4||p===D||!cs.every(c=>H[p].includes(c)&&rk(c)===rk(cs[0])))return;
   if(cs.some(c=>S.bn&&S.bn.by!==p&&su(c)===S.bn.s))return;
-  if(!S.tb.length){if(p!==S.at)return}else if(p!==S.at&&S.opts&&!S.opts.th)return;else if(!S.tb.some(x=>rk(x[0])===rk(cs[0])||(x[1]>=0&&rk(x[1])===rk(cs[0]))))return;
+  if(!S.tb.length){if(p!==S.at)return}else if(!canThrowIn(S,p))return;else if(!S.tb.some(x=>rk(x[0])===rk(cs[0])||(x[1]>=0&&rk(x[1])===rk(cs[0]))))return;
   if(S.tb.length+cs.length>(S.cap||6)||S.tb.filter(x=>x[1]<0).length+cs.length>H[D].length)return;
   const bk=JSON.stringify({...S,bk:null});cs.forEach(c=>{rem(p,c);S.tb.push([c,-1,0])});lg(S.nm[p]+' атакует '+cs.map(cn).join(' '));cs.forEach(c=>trig(p,c));trap(p);S.ps=[];S.bk=JSON.parse(bk);S.lm=p}
  else if(m.t==='trf'){const nD=nxt(D);if(!S.opts||!S.opts.tf||p!==D||S.tk||S.fz||!H[p].includes(m.c)||!S.tb.length||S.tb.some(x=>x[1]>=0)||S.tb.some(x=>rk(x[0])!==rk(m.c))||nD===D||H[nD].length<S.tb.length+1||(S.bn&&S.bn.by!==p&&su(m.c)===S.bn.s))return;
@@ -313,9 +314,9 @@ function apply(p,m){if(!S||S.ph!=='play'||!alive(p))return;const D=nxt(S.at),H=S
   if(k<0||!(beats(S.tb[k][0],m.c,S.tr,S.tb[k][2]||0)||(wild(m.c,p)&&su(S.tb[k][0])!==S.tr)))return;
   const bk=JSON.stringify({...S,bk:null});rem(p,m.c);S.tb[k][1]=m.c;lg(S.nm[p]+' бьёт '+cn(m.c));trig(p,m.c);trap(p);S.ps=[];S.bk=JSON.parse(bk);S.lm=p}
  else if(m.t==='take'){if(p!==D||!S.tb.length||S.tk)return;S.tk=true;S.ps=[];S.bk=null;S.lm=-1;lg(S.nm[p]+' берёт карты')}
- else if(m.t==='done'){if(p===D||!S.tb.length||!(S.tk||S.tb.every(x=>x[1]>=0))||S.ps.includes(p)||(S.opts&&!S.opts.th&&p!==S.at))return;
+ else if(m.t==='done'){if(p===D||!S.tb.length||!(S.tk||S.tb.every(x=>x[1]>=0))||S.ps.includes(p)||!canThrowIn(S,p))return;
   S.ps.push(p);S.bk=null;S.lm=-1;lg(S.nm[p]+(S.tk?' больше не подкидывает':': бито'));
-  const oth=[...Array(S.n).keys()].filter(i=>alive(i)&&i!==D&&(!S.opts||S.opts.th||i===S.at));
+  const oth=[...Array(S.n).keys()].filter(i=>alive(i)&&i!==D&&canThrowIn(S,i));
   if(oth.every(i=>S.ps.includes(i))){
    if(S.tk){if(S.sh[D]){S.sh[D]=false;S.dc.push(...tbc());lg('Щит спас '+S.nm[D]);endRound(D)}else{H[D].push(...tbc());endRound(nxt(D))}}
    else{S.dc.push(...tbc());endRound(D)}}}
@@ -328,7 +329,7 @@ const $e=id=>document.getElementById(id);
 function banner(t){const b=$e('banner');if(!b)return;b.textContent=t||'';b.style.display=t?'block':'none'}
 function start(){const chaos=selMode===1,ns=chaos?-1:selSu===4?(()=>{let x;do x=rnd(4);while(S&&x===S.su);return x})():selSu;const ps=LB.slice(0,MAXP),nb=Math.min(botN,MAXP-ps.length),n=ps.length+nb,d=[...Array(selDecks===2?104:52).keys(),...(selMode===2?(selDecks===2?[500,501,502,503]:[500,501]):[])];do{for(let i=d.length-1;i>0;i--){const j=rnd(i+1);[d[i],d[j]]=[d[j],d[i]]}}while(su(d[0])===ns||JK(d[0]));
  LB.forEach(e=>e.idx=-1);ps.forEach((e,i)=>e.idx=i);
- S={gid:Date.now(),ph:'play',su:ns,cm:chaos?Array.from({length:13},()=>rnd(4)):null,nd:d.length,jm:selMode===2,opts:{tf:optTf,th:optTh},tr:su(d[0]),dk:d,n,nm:[...ps.map(e=>e.name),...Array.from({length:nb},(_,k)=>'Бот '+(k+1))],uid:[...ps.map(e=>e.uid),...Array.from({length:nb},(_,k)=>'bot'+(k+1))],bot:[...ps.map(()=>false),...Array.from({length:nb},()=>true)],off:[],tm:selTm,dl:0,sg:'',h:Array.from({length:n},()=>[]),tb:[],at:rnd(n),dr:1,ch:Array(n).fill(1),cr:0,out:[],lv:[],dc:[],tp:null,fr:Array(n).fill(0),cs:Array(n).fill(false),cx:Array(n).fill(0),ps:[],tk:false,lg:[],vc:Array.from({length:n},()=>[]),pk:[],sh:Array(n).fill(false),bn:null,cap:0,last:'',ua:[],fz:false,sk:-1,lk:false,lm:-1,bk:null,fx:null,lz:-1};
+ S={gid:Date.now(),ph:'play',su:ns,cm:chaos?Array.from({length:13},()=>rnd(4)):null,nd:d.length,jm:selMode===2,opts:{tf:optTf,th:thMode!==2,nb:thMode===1},tr:su(d[0]),dk:d,n,nm:[...ps.map(e=>e.name),...Array.from({length:nb},(_,k)=>'Бот '+(k+1))],uid:[...ps.map(e=>e.uid),...Array.from({length:nb},(_,k)=>'bot'+(k+1))],bot:[...ps.map(()=>false),...Array.from({length:nb},()=>true)],off:[],tm:selTm,dl:0,sg:'',h:Array.from({length:n},()=>[]),tb:[],at:rnd(n),dr:1,ch:Array(n).fill(1),cr:0,out:[],lv:[],dc:[],tp:null,fr:Array(n).fill(0),cs:Array(n).fill(false),cx:Array(n).fill(0),ps:[],tk:false,lg:[],vc:Array.from({length:n},()=>[]),pk:[],sh:Array(n).fill(false),bn:null,cap:0,last:'',ua:[],fz:false,sk:-1,lk:false,lm:-1,bk:null,fx:null,lz:-1};
  for(let i=0;i<n;i++)S.h[i]=S.dk.splice(-6);sel=null;LOCKED=true;pub()}
 function V(i){return {...S,you:i,now:Date.now(),uid:[],dk:S.dk.map(c=>S.pk.includes(c)?c:-1),h:S.h.map((x,j)=>j===i?x:x.map(c=>S.vc[j].includes(c)?c:-1)),bk:!!S.bk,dc:[]}}
 function stamp(){const sg=[S.at,S.tb.length,S.tb.filter(x=>x[1]>=0).length,S.tk,S.ps.length,S.ph,S.dr].join();if(sg!==S.sg){S.sg=sg;S.dl=S.tm&&S.ph==='play'?Date.now()+S.tm*1000:0}}
@@ -434,7 +435,7 @@ function showHelp(){if($e('help'))return;const d=document.createElement('div');d
 <li><b>Цель:</b> избавиться от всех карт. Последний с картами — дурак.</li>
 <li><b>Ход:</b> атакующий кладёт карту, защищающийся бьёт её старшей картой той же масти или козырем (оранжевое свечение).</li>
 <li>Не можешь или не хочешь отбиваться — «Взять карты». Остальные тогда могут подкинуть карты тех же значений.</li>
-<li><b>Бито:</b> когда все пары отбиты, каждый, кроме защищающегося, нажимает «Бито». Раунд закончится, когда спасуют все.</li>
+<li>Кто подкидывает, выбирает хозяин: все, только соседи защищающегося (атакующий и следующий за защищающимся, значок 🤝) или только атакующий.</li><li><b>Бито:</b> когда все пары отбиты, каждый, кроме защищающегося, нажимает «Бито». Раунд закончится, когда спасуют все.</li>
 <li><b>Способности</b> есть у карт выбранной масти (цветное свечение). Нажми на карту, чтобы прочитать её способность, и ещё раз, чтобы сыграть.</li>
 <li>Каждая карта со способностью стоит свой заряд ⚡ (от 0 до 5): чем сильнее, тем дороже. Заряд: 1 в начале и +0,5 за раунд (максимум 7). Мощные карты замораживают заряд соперников на 2 раунда (🧊). Бесплатные способности работают раз в раунд.</li>
 <li>«↩ Вернуть карту» работает, пока никто не сходил после тебя.</li>
@@ -566,7 +567,7 @@ function kickConn(e){BAN.add(e.uid);try{e.c.send({t:'kicked'})}catch(x){}
 function kickEntry(i){const e=LB[i];if(!isHost||!e||!e.c||!confirm('Удалить игрока «'+e.name+'»?'))return;kickConn(e)}
 function kickPlayer(i){const e=LB.find(x=>x.idx===i&&x.c);if(!isHost||!e||!confirm('Удалить игрока «'+e.name+'»?'))return;kickConn(e)}
 const specHtml=()=>{const sp=LB.map((e,k)=>[e,k]).filter(([e])=>e.c&&e.idx<0);return sp.length?`<div class="tag">Зрители: ${sp.map(([e,k])=>esc(e.name)+` <button class="kick" onclick="kickEntry(${k})">✕</button>`).join(' · ')}</div>`:''};
-const VER='24.10 04:07 · справочник, боты, джокеры';function ownerOff(){try{localStorage.removeItem('rz_owner')}catch(e){}isOwner=false;home()}
+const VER='25.10 15:40 · подкидывают соседи';function ownerOff(){try{localStorage.removeItem('rz_owner')}catch(e){}isOwner=false;home()}
 let ROOMKEY='',KEYEXP=0,LOCKED=false;const newKey=()=>Math.random().toString(36).slice(2,10);
 function admit(d){const u=String(d.uid||'');if(findIdx(d)>=0)return null;
  if(LOCKED)return 'Вход в комнату закрыт хозяином.';
@@ -622,8 +623,8 @@ function draw(g){
  const face=c=>`<span class="mf ${su(c)===1||su(c)===2?'r':''} ${su(c)===g.tr?'tp':''}">${cn(c)}</span>`;
  const mini=i=>{if(i===mi)return '';const H=g.h[i],f=H.filter(c=>c>=0),b=H.length-f.length;return `<div class="mini">${f.map(face).join('')}${'<span class="mb"></span>'.repeat(b)}</div>`};
  const open=g.dk.filter(c=>c>=0),red=g.tr===1||g.tr===2;
- h+=`<div class="info"><div class="chip"><span class="bksm"></span> <b>${g.dk.length}</b></div><div class="chip tbx">козырь <b${red?' style="color:var(--red)"':''}>${SY[g.tr]}</b></div>${g.cm?'<div class="chip abx s0">🌀 <b>Хаос</b></div>':`<div class="chip abx s${g.su}">✨ <b>${SY[g.su]}</b> ${SN[g.su]}</div>`}${g.nd===104?'<div class="chip">2×52</div>':''}${g.tm&&g.dl&&play?'<div class="chip">⏱ <b id="tmr"></b></div>':''}${g.dr<0?'<div class="chip">↺</div>':''}${g.lk?'<div class="chip">🔇×'+g.lk.r+'</div>':''}${g.bn?`<div class="chip">🚫 ${SY[g.bn.s]}×${g.bn.r}</div>`:''}</div>${open.length?`<div class="tag">Открыты в колоде: ${open.map(face).join('')}</div>`:''}${mi<0?'<div class="tag">👀 ты зритель</div>':''}${isHost?specHtml()+hostPanel():''}`;
- h+=`<div class="plist">${g.nm.map((n,i)=>`<div class="pl ${i===g.at?'at':''} ${i===D?'df':''} ${g.out.includes(i)?'out':''}">${play&&i===g.at?'⚔️ ':play&&i===D?'🛡 ':''}${g.bot&&g.bot[i]?'🤖 ':''}${esc(n)}${i===mi?' (ты)':''}${g.lv.includes(i)?' (вышел)':''}${(g.off||[]).includes(i)?' (нет связи)':''}${(g.ps||[]).includes(i)?' ✅':''}${isHost&&i!==mi&&!g.out.includes(i)&&!(g.bot&&g.bot[i])?`<button class="kick" onclick="kickPlayer(${i})">✕</button>`:''}<br><b>${g.h[i].length}</b> 🃏 · ⚡${fmt(g.ch[i])}${g.fr&&g.fr[i]>0?' 🧊'+g.fr[i]:''}${mini(i)}</div>`).join('')}</div>`;
+ h+=`<div class="info"><div class="chip"><span class="bksm"></span> <b>${g.dk.length}</b></div><div class="chip tbx">козырь <b${red?' style="color:var(--red)"':''}>${SY[g.tr]}</b></div>${g.cm?'<div class="chip abx s0">🌀 <b>Хаос</b></div>':`<div class="chip abx s${g.su}">✨ <b>${SY[g.su]}</b> ${SN[g.su]}</div>`}${g.nd===104?'<div class="chip">2×52</div>':''}${g.opts&&g.opts.nb?'<div class="chip">🤝 подкидывают соседи</div>':''}${g.tm&&g.dl&&play?'<div class="chip">⏱ <b id="tmr"></b></div>':''}${g.dr<0?'<div class="chip">↺</div>':''}${g.lk?'<div class="chip">🔇×'+g.lk.r+'</div>':''}${g.bn?`<div class="chip">🚫 ${SY[g.bn.s]}×${g.bn.r}</div>`:''}</div>${open.length?`<div class="tag">Открыты в колоде: ${open.map(face).join('')}</div>`:''}${mi<0?'<div class="tag">👀 ты зритель</div>':''}${isHost?specHtml()+hostPanel():''}`;
+ h+=`<div class="plist">${g.nm.map((n,i)=>`<div class="pl ${i===g.at?'at':''} ${i===D?'df':''} ${g.out.includes(i)?'out':''}">${play&&i===g.at?'⚔️ ':play&&i===D?'🛡 ':play&&g.opts&&g.opts.nb&&canThrowIn(g,i)?'🤝 ':''}${g.bot&&g.bot[i]?'🤖 ':''}${esc(n)}${i===mi?' (ты)':''}${g.lv.includes(i)?' (вышел)':''}${(g.off||[]).includes(i)?' (нет связи)':''}${(g.ps||[]).includes(i)?' ✅':''}${isHost&&i!==mi&&!g.out.includes(i)&&!(g.bot&&g.bot[i])?`<button class="kick" onclick="kickPlayer(${i})">✕</button>`:''}<br><b>${g.h[i].length}</b> 🃏 · ⚡${fmt(g.ch[i])}${g.fr&&g.fr[i]>0?' 🧊'+g.fr[i]:''}${mini(i)}</div>`).join('')}</div>`;
  h+=`<div class="table">${g.tb.length?g.tb.map(([a,d,b])=>`<div class="pair">${card(a,g,'',false,true)}${d>=0?card(d,g,'',false,true):''}${b?`<span class="pill" style="position:absolute;top:-8px;right:-6px">${b>0?'+':''}${b}</span>`:''}</div>`).join(''):'<span class="tag">Стол пуст</span>'}</div>`;
  const oldTb=prevTb;prevTb=new Set(g.tb.flatMap(x=>[x[0],x[1]]));
  if(g.ph==='over'){h+=`<h1>${g.lz>=0?'🤡 Дурак: '+esc(g.nm[g.lz]):'Ничья!'}</h1><p>${g.out.filter(i=>!g.lv.includes(i)).map((i,k)=>(k+1)+'. '+esc(g.nm[i])).join('<br>')}</p>`;if(isHost)h+=optsHtml('draw(lastG)')+(selMode===1?'':suBtns('draw(lastG)'))+tmBtns('draw(lastG)')+`<button class="b" onclick="start()">Новая партия</button>`}
@@ -631,13 +632,13 @@ function draw(g){
   if(myAct)h+=`<div class="turn">🔔 ${mi===D?'Твой ход: отбивайся или бери':'Твой ход: атакуй'}</div>`;
   else h+=`<div class="tag mid">${!g.tb.length?'Ждём ход: '+esc(g.nm[g.at]):g.tk?esc(g.nm[D])+' берёт карты':hasU?esc(g.nm[D])+' отбивается':'Все пары отбиты'}</div>`;
   const passed=(g.ps||[]).includes(mi),acts=[];
-  if(mi>=0&&mi!==D&&alive(mi,g)&&g.tb.length&&(g.tk||allDef)&&!passed&&(!g.opts||g.opts.th||mi===g.at))acts.push(`<button class="b" onclick="send({t:'done'})">${g.tk?'Больше не подкидываю':'Бито'}</button>`);
+  if(mi>=0&&mi!==D&&alive(mi,g)&&g.tb.length&&(g.tk||allDef)&&!passed&&canThrowIn(g,mi))acts.push(`<button class="b" onclick="send({t:'done'})">${g.tk?'Больше не подкидываю':'Бито'}</button>`);
   if(mi===D&&!g.tk&&hasU)acts.push(`<button class="b alt" onclick="send({t:'take'})">Взять карты</button>`);
   if(mi>=0&&g.lm===mi&&g.bk)acts.push(`<button class="b alt" onclick="send({t:'undo'})">↩ Вернуть</button>`);
   if(acts.length)h+=`<div class="acts">${acts.join('')}</div>`;
   if(passed)h+=`<div class="tag mid">✅ Ты спасовал, ждём остальных…</div>`;
   if(g.fz&&mi===D&&!g.tk)h+='<div class="err mid">Отбиться нельзя, только взять!</div>'}
- const hand=mi>=0?g.h[mi].slice().sort((a,b)=>(JK(a)?99:a%52)-(JK(b)?99:b%52)||a-b):[],can=mi>=0&&play&&alive(mi,g)&&(mi===D?(!g.tk&&g.tb.length>0):(mi===g.at||(g.tb.length>0&&(!g.opts||g.opts.th))));
+ const hand=mi>=0?g.h[mi].slice().sort((a,b)=>(JK(a)?99:a%52)-(JK(b)?99:b%52)||a-b):[],can=mi>=0&&play&&alive(mi,g)&&(mi===D?(!g.tk&&g.tb.length>0):(mi===g.at||(g.tb.length>0&&canThrowIn(g,mi))));
  selS=selS.filter(c=>hand.includes(c));const pc=selS.length?selS[0]:infoC;
  if(pc===null||pc===undefined)h+=`<div class="prev"><span class="tag">Нажми на карту, чтобы увидеть её способность</span></div>`;
  else{const ab=abOf(pc,g);h+=`<div class="prev">${card(pc,g)}<div><b>${cn(pc)}</b>${su(pc)===g.tr?' · козырь':''}<br>${ab?`<b>${esc(ab[1])}</b>: ${dsc(ab[0])}${ab[2]>0?' · стоит ⚡'+fmt(ab[2]):''}`:'обычная карта'}${can&&selS.length===1?`<br><button class="b" onclick="act(${pc})">Сыграть</button>`:can&&selS.length>1?`<br><b>Выбрано:</b> ${selS.map(cn).join(' ')}<br><button class="b" onclick="playSel()">Сыграть все (${selS.length})</button>`:''}${can&&selS.length===1&&mi===D&&canTrf(g,pc)?`<br><button class="b alt" onclick="trfSel()">Перевести</button>`:''}</div></div>`}
