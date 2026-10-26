@@ -238,12 +238,23 @@ body.bglight{--fg:#1a1412;--card:#fffdf8;--muted:#5d5246;--line:#d3c6aa;--acc:#a
 body.bgdark{--bg:#0c0a1f}body.bglight{--bg:#f6f1e6}
 body.bgdark .dock{background:linear-gradient(to top,rgba(10,8,25,.88) 80%,transparent)}
 body.bglight .dock{background:linear-gradient(to top,rgba(246,241,230,.92) 80%,transparent)}
+
+#bar button{position:relative}
+#cbadge{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;border-radius:9px;background:#e5484d;color:#fff;font-size:11px;font-style:normal;display:none;align-items:center;justify-content:center;padding:0 4px}
+#cbub{position:fixed;left:10px;top:56px;z-index:75;display:flex;flex-direction:column;gap:4px;pointer-events:none;max-width:min(80vw,340px)}
+.cb{background:var(--card);color:var(--fg);border:2px solid var(--line);border-radius:12px;padding:5px 9px;font-size:13px;box-shadow:0 4px 12px #0004;animation:tin .2s ease-out;word-break:break-word}
+#clog{max-height:42vh;overflow-y:auto;border:2px solid var(--line);border-radius:10px;padding:6px 8px;background:var(--card);margin:6px 0;font-size:14px;min-height:60px}
+.cm{margin:3px 0;word-break:break-word}
+.crow{display:flex;gap:6px;margin:6px 0}.crow input{margin:0}.crow button{width:56px;margin:0}
+body.hasbg main{border-radius:16px;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+body.bglight main{background:rgba(255,255,255,.58)}
+body.bgdark main{background:rgba(8,6,22,.5)}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Oswald:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-<div id="bgl"></div><div id="banner"></div>
-<div id="bar"><button onclick="showHelp()" title="Правила">❓</button><button onclick="showRef()" title="Справочник карт">📖</button><button onclick="showSet()" title="Настройки">⚙️</button><button onclick="togStk()" title="Реакции">😀</button><button id="sndb" onclick="togSnd()" title="Звук">🔊</button><button id="micb" onclick="togMic()" title="Голосовая связь">🎤</button></div>
+<div id="bgl"></div><div id="cbub"></div><div id="banner"></div>
+<div id="bar"><button onclick="showHelp()" title="Правила">❓</button><button onclick="showRef()" title="Справочник карт">📖</button><button onclick="showSet()" title="Настройки">⚙️</button><button onclick="showChat()" title="Чат">💬<i id="cbadge"></i></button><button onclick="togStk()" title="Реакции">😀</button><button id="sndb" onclick="togSnd()" title="Звук">🔊</button><button id="micb" onclick="togMic()" title="Голосовая связь">🎤</button></div>
 <main id="app"></main>
 <div id="chatbox"><div id="stk"><button onclick="sendEmo('😂')">😂</button><button onclick="sendEmo('🔥')">🔥</button><button onclick="sendEmo('😡')">😡</button><button onclick="sendEmo('👏')">👏</button><button onclick="sendEmo('😱')">😱</button><button onclick="sendEmo('💀')">💀</button><button onclick="sendEmo('👍')">👍</button><button onclick="sendEmo('😭')">😭</button></div></div>
 <script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script>
@@ -440,7 +451,7 @@ function hostMsg(c,d){if(!d)return;
    if(S){const i=findIdx(d);if(i>=0){e.idx=i;S.uid[i]=e.uid;S.off=S.off.filter(x=>x!==i);if(S.rp&&S.rp.includes(i)){S.bot[i]=false;S.rp=S.rp.filter(x=>x!==i);S.nm[i]=S.nm[i].replace(/ \(бот\)$/,'')}}}const dq=LB.findIndex(x=>x.uid&&x.uid===e.uid&&x.c&&x.c!==c);if(dq>=0){try{LB[dq].c.close()}catch(x){}LB.splice(dq,1)}LB.push(e)}
   bLobby();bPl();if(S)pub();else draw(null)}
  else if(d.t==='mv'&&S){const e=LB.find(x=>x.c===c);if(e&&e.idx>=0)apply(e.idx,d.m)}
- else if(d.t==='chat'||d.t==='emo'){const e=LB.find(x=>x.c===c);if(e)bcast({t:'msg',n:e.name,x:d.x?String(d.x).slice(0,120):'',e:d.e?String(d.e).slice(0,4):''})}}
+ else if(d.t==='chat'||d.t==='emo'){const e=LB.find(x=>x.c===c);if(e)bcast({t:'msg',n:e.name,x:d.x?String(d.x).slice(0,160):'',e:d.e?String(d.e).slice(0,4):''})}}
 function bcast(m){LB.forEach(e=>e.c&&e.c.send(m));onMsg(m)}
 function leave(i){S.out.push(i);S.lv.push(i);S.h[i]=[];S.tb=[];S.ps=[];S.tk=false;S.fz=false;S.bk=null;S.lm=-1;
  const al=[...Array(S.n).keys()].filter(j=>alive(j));if(al.length<=1){S.ph='over';S.lz=al.length?al[0]:-1}else if(!alive(S.at))S.at=nxt(S.at)}
@@ -471,10 +482,18 @@ function render(g){lastG=g;try{document.body.classList.toggle('chaos',!!g.cm)}ca
  if(g.ph==='over'&&overGid!==g.gid){overGid=g.gid;sound('win')}
  draw(g)}
 /* chat */
-function onMsg(m){if(m.e)floatEmo(m.e,m.n);sound('chat')}
+let chatLog=[],unread=0,lastSend=0,chatOpen=false;
+function updBadge(){const b=$e('cbadge');if(!b)return;b.textContent=unread>0?String(unread):'';b.style.display=unread>0?'flex':'none'}
+function bubble(m){const w=$e('cbub');if(!w||!w.appendChild)return;const d=document.createElement('div');d.className='cb';d.innerHTML='<b>'+esc(m.n)+':</b> '+esc(m.x);w.appendChild(d);while(w.children&&w.children.length>3)w.removeChild(w.children[0]);setTimeout(()=>{try{d.remove()}catch(e){}},5500)}
+function renderChat(){const l=$e('clog');if(!l)return;l.innerHTML=chatLog.length?chatLog.map(x=>`<div class="cm"><b>${esc(x.n)}:</b> ${esc(x.x)}</div>`).join(''):'<div class="tag">Пока пусто. Напиши что-нибудь!</div>';l.scrollTop=l.scrollHeight}
+function showChat(){if(chatOpen){closeChat();return}chatOpen=true;unread=0;updBadge();const d=document.createElement('div');d.id='chat';d.className='ovl';d.style.alignItems='flex-end';
+ d.innerHTML=`<div class="box" style="max-height:72vh"><h2>Чат</h2><div id="clog"></div><div class="crow"><input id="ci" maxlength="160" placeholder="Сообщение…" onkeydown="if(event.key==='Enter')sendChat()"><button class="b" onclick="sendChat()">➤</button></div><button class="b alt" onclick="closeChat()">Закрыть</button></div>`;document.body.appendChild(d);renderChat();setTimeout(()=>{const i=$e('ci');if(i&&i.focus)i.focus()},50)}
+function closeChat(){chatOpen=false;const d=document.getElementById('chat');if(d&&d.remove)d.remove()}
+function sendChat(){const i=$e('ci');if(!i)return;const x=String(i.value||'').trim();if(!x||Date.now()-lastSend<600)return;lastSend=Date.now();i.value='';pushMsg({t:'chat',x:x.slice(0,160)})}
+function onMsg(m){if(m.e)floatEmo(m.e,m.n);if(m.x){chatLog.push({n:m.n,x:m.x});if(chatLog.length>60)chatLog.shift();if(chatOpen)renderChat();else{unread++;updBadge();bubble(m)}}sound('chat')}
 function togStk(){const t=$e('stk');t.style.display=t.style.display==='grid'?'none':'grid'}
 function sendEmo(e){$e('stk').style.display='none';pushMsg({t:'emo',e})}
-function pushMsg(m){if(isHost)bcast({t:'msg',n:myName,x:'',e:m.e||''});else if(hostConn)hostConn.send(m)}
+function pushMsg(m){if(isHost)bcast({t:'msg',n:myName,x:m.x?String(m.x).slice(0,160):'',e:m.e||''});else if(hostConn)hostConn.send(m)}
 function floatEmo(e,n){const d=document.createElement('div');d.className='fe';d.style.left=(10+rnd(75))+'%';d.innerHTML=esc(e)+'<small>'+esc(n)+'</small>';document.body.appendChild(d);setTimeout(()=>d.remove(),2500)}
 /* sound */
 let AC=null;
@@ -653,13 +672,29 @@ const svgUrl=s=>'url(data:image/svg+xml,'+encodeURIComponent(s).replace(/\(/g,'%
 const mkBack=(bg,ln,ac,sym)=>`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 94'><defs><pattern id='p' width='10' height='10' patternUnits='userSpaceOnUse' patternTransform='rotate(45)'><path d='M0 0H10M0 0V10' stroke='${ln}' stroke-width='.7' opacity='.55'/></pattern></defs><rect width='60' height='94' fill='${bg}'/><rect x='5' y='5' width='50' height='84' fill='url(#p)'/><rect x='3' y='3' width='54' height='88' rx='4' fill='none' stroke='${ac}' stroke-width='1.6'/><rect x='8' y='8' width='44' height='78' rx='2' fill='none' stroke='${ac}' stroke-width='.6'/><circle cx='30' cy='47' r='13' fill='${bg}' stroke='${ac}' stroke-width='1.2'/><text x='30' y='54' text-anchor='middle' font-size='20' fill='${ac}'>${sym}</text></svg>`;
 const BACKCSS={gold:svgUrl(mkBack('#14110f','#c9a24a','#e8c673','♠')),blood:svgUrl(mkBack('#3a0d12','#c0141f','#ff6b6b','♥')),night:svgUrl(mkBack('#0c0a1f','#5ee0ff','#9fe8ff','♦')),moss:svgUrl(mkBack('#0f3d2e','#3fd06a','#9be88c','♣'))};
 const BACKKEYS=['color','bw','sun','dark','bird','nebula','gold','blood','night','moss'];
+const mkSun=()=>{let w='';for(let i=0;i<16;i++){const a0=i*Math.PI/8,a1=a0+Math.PI/16,r=90;w+=`<path d='M30 47L${(30+Math.cos(a0)*r).toFixed(1)} ${(47+Math.sin(a0)*r).toFixed(1)}L${(30+Math.cos(a1)*r).toFixed(1)} ${(47+Math.sin(a1)*r).toFixed(1)}Z' fill='#b3202a'/>`}
+ return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 94'><rect width='60' height='94' fill='#e9e2c8'/>${w}<rect x='3' y='3' width='54' height='88' rx='4' fill='none' stroke='#e8c673' stroke-width='1.8'/><circle cx='30' cy='47' r='6' fill='#e9e2c8' stroke='#b3202a' stroke-width='1.5'/></svg>`};
+const mkStone=()=>`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 94'><defs><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 .6 0 0 0 0 .6 0 0 0 0 .6 0 0 0 .38 0'/></filter><radialGradient id='g'><stop offset='0' stop-color='#42424a'/><stop offset='1' stop-color='#0b0b0e'/></radialGradient></defs><rect width='60' height='94' fill='url(#g)'/><rect width='60' height='94' filter='url(#n)'/><rect x='3' y='3' width='54' height='88' rx='4' fill='none' stroke='#e8c673' stroke-width='1.6'/><rect x='8' y='8' width='44' height='78' rx='2' fill='none' stroke='#e8c673' stroke-width='.5' opacity='.7'/></svg>`;
+const mkToile=()=>`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 94'><defs><pattern id='f' width='20' height='20' patternUnits='userSpaceOnUse'><g fill='#d98a94'><circle cx='10' cy='6' r='2.6'/><circle cx='14' cy='10' r='2.6'/><circle cx='10' cy='14' r='2.6'/><circle cx='6' cy='10' r='2.6'/></g><circle cx='10' cy='10' r='1.9' fill='#f6dcd8'/><path d='M0 0L4 4M20 0L16 4M0 20L4 16M20 20L16 16' stroke='#e6aab0' stroke-width='.8'/></pattern></defs><rect width='60' height='94' fill='#f6dcd8'/><rect x='4' y='4' width='52' height='86' fill='url(#f)'/><rect x='3' y='3' width='54' height='88' rx='4' fill='none' stroke='#c9707c' stroke-width='1.8'/></svg>`;
+const mkNebula=()=>{let st='';for(let i=0;i<46;i++){st+=`<circle cx='${(i*47)%56+2}' cy='${(i*29)%90+2}' r='${i%6===0?.9:.45}' fill='${i%7===0?"#ffd9a0":"#fff"}'/>`}
+ return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 94'><defs><radialGradient id='a' cx='35%' cy='38%' r='58%'><stop offset='0' stop-color='#e8253f' stop-opacity='.95'/><stop offset='1' stop-color='#e8253f' stop-opacity='0'/></radialGradient><radialGradient id='b' cx='70%' cy='70%' r='52%'><stop offset='0' stop-color='#8a1050' stop-opacity='.85'/><stop offset='1' stop-color='#8a1050' stop-opacity='0'/></radialGradient></defs><rect width='60' height='94' fill='#0d0206'/><rect width='60' height='94' fill='url(#a)'/><rect width='60' height='94' fill='url(#b)'/>${st}<rect x='3' y='3' width='54' height='88' rx='4' fill='none' stroke='#e8c673' stroke-width='1.6'/></svg>`};
+BACKCSS.sun=svgUrl(mkSun());BACKCSS.dark=svgUrl(mkStone());BACKCSS.bird=svgUrl(mkToile());BACKCSS.nebula=svgUrl(mkNebula());
 const backCss=k=>BACKCSS[k]||'url(cards/'+(['sun','dark','bird','nebula'].includes(k)?'back-':'joker-')+k+'.jpg)';
-const BGS=[['pink','Розовый','light'],['grid','Сетка','dark'],['felt','Сукно','dark'],['velvet','Бархат','dark'],['paper','Бумага','light'],['indigo','Индиго','dark']];
+const NZ=svgUrl("<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .16 0'/></filter><rect width='160' height='160' filter='url(#n)'/></svg>");
+const STARS="radial-gradient(1.5px 1.5px at 20px 30px,#fff,transparent),radial-gradient(1px 1px at 90px 70px,#cfe8ff,transparent),radial-gradient(1.5px 1.5px at 150px 120px,#fff,transparent),radial-gradient(1px 1px at 60px 150px,#ffe9c2,transparent),radial-gradient(1px 1px at 120px 20px,#fff,transparent)";
+const BGS=[['pink','Розовый','light','#ffe8f4'],
+['grid','Сетка','dark','linear-gradient(rgba(94,224,200,.13) 1px,transparent 1px) 0 0/44px 44px,linear-gradient(90deg,rgba(94,224,200,.13) 1px,transparent 1px) 0 0/44px 44px,radial-gradient(circle at 85% 95%,#175a52,#06100f 62%)'],
+['felt','Сукно','dark',NZ+',radial-gradient(circle at 50% 30%,#1a6a50,#06201a 78%)'],
+['velvet','Бархат','dark',NZ+',radial-gradient(circle at 50% 25%,#80192a,#1c0408 80%)'],
+['paper','Бумага','light',NZ+',radial-gradient(circle at 50% 30%,#f7efdb,#d9ccab 92%)'],
+['indigo','Индиго','dark',STARS+',linear-gradient(#1d1580,#080620)'],
+['sunray','Лучи','light','repeating-conic-gradient(from 0deg at 50% 42%,#c0303a 0 7.5deg,#ece4ca 7.5deg 15deg)'],
+['nebula','Туманность','dark','radial-gradient(ellipse at 28% 38%,rgba(230,40,70,.75),transparent 55%),radial-gradient(ellipse at 72% 66%,rgba(130,10,60,.7),transparent 52%),'+STARS+',#0d0206']];
 function applyBg(){let k='none';try{k=localStorage.getItem('rz_bg')||'none'}catch(e){}
  try{const b=document.body,el=document.getElementById('bgl');if(!b||!el)return;b.classList.remove('hasbg','bgdark','bglight');
-  if(b.classList.contains('chaos')||k==='none'){el.style.backgroundImage='';return}
-  const it=k==='r'?BGS[rnd(BGS.length)]:BGS.find(x=>x[0]===k);if(!it){el.style.backgroundImage='';return}
-  el.style.backgroundImage='url(bg/'+it[0]+'.jpg)';b.classList.add('hasbg','bg'+it[2])}catch(e){}}
+  if(b.classList.contains('chaos')||k==='none'){el.style.background='';return}
+  const it=k==='r'?BGS[rnd(BGS.length)]:BGS.find(x=>x[0]===k);if(!it){el.style.background='';return}
+  el.style.background=it[3];b.classList.add('hasbg','bg'+it[2])}catch(e){}}
 function setBg(k){try{localStorage.setItem('rz_bg',k)}catch(e){}applyBg();home()}
 const bgHtml=()=>{let t='none';try{t=localStorage.getItem('rz_bg')||'none'}catch(e){}return `<div class="tag">Фон</div><div class="themes">${[['none','Без фона'],['r','🎲 Случайно'],...BGS.map(x=>[x[0],x[1]])].map(([k,n])=>`<button class="${t===k?'on':''}" onclick="setBg('${k}')">${n}</button>`).join('')}</div>`};
 function applyBack(){let k='color';try{k=localStorage.getItem('rz_back')||'color'}catch(e){}document.documentElement.style.setProperty('--back',backCss(k));return k}
@@ -675,7 +710,7 @@ function kickConn(e){BAN.add(e.uid);ADMIT.delete(e.uid);if(S&&S.adm)delete S.adm
 function kickEntry(i){const e=LB[i];if(!isHost||!e||!e.c||!confirm('Удалить игрока «'+e.name+'»?'))return;kickConn(e)}
 function kickPlayer(i){const e=LB.find(x=>x.idx===i&&x.c);if(!isHost||!e||!confirm('Удалить игрока «'+e.name+'»?'))return;kickConn(e)}
 const specHtml=()=>{const sp=LB.map((e,k)=>[e,k]).filter(([e])=>e.c&&e.idx<0);return sp.length?`<div class="tag">Зрители: ${sp.map(([e,k])=>esc(e.name)+` <button class="kick" onclick="kickEntry(${k})">✕</button>`).join(' · ')}</div>`:''};
-const VER='26.10 20:28 · фоны, события, личные масти';function ownerOff(){try{localStorage.removeItem('rz_owner')}catch(e){}isOwner=false;home()}
+const VER='26.10 20:55 · чат, свои фоны';function ownerOff(){try{localStorage.removeItem('rz_owner')}catch(e){}isOwner=false;home()}
 let ROOMKEY='',KEYEXP=0,LOCKED=false;const ADMIT=new Map();const newKey=()=>Math.random().toString(36).slice(2,10);
 function admit(d){if(ADMIT.has(String(d.uid||'')))return null;{const nm=String(d.name||'').trim().toLowerCase();if(nm&&[...ADMIT.values()].some(v=>v.toLowerCase()===nm)&&!LB.some(e=>e.c&&e.name.toLowerCase()===nm))return null}const u=String(d.uid||'');if(findIdx(d)>=0)return null;
  if(LOCKED)return 'Вход в комнату закрыт хозяином.';
