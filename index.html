@@ -163,14 +163,68 @@ body.chaos::before{content:'';position:fixed;inset:0;pointer-events:none;box-sha
 @keyframes flyin{from{transform:translate(var(--fx,0),var(--fy,0)) scale(.55) rotate(-12deg);opacity:.15}to{transform:var(--end,none);opacity:1}}
 .pair .card:nth-child(2){--end:rotate(8deg)}
 .card.fly,.card.img.fly{animation:flyin .5s cubic-bezier(.2,.8,.2,1) backwards!important}
+
+html{-webkit-text-size-adjust:100%;overscroll-behavior-y:contain}
+body{min-height:100dvh;-webkit-tap-highlight-color:transparent}
+.card,.pl,button,.chip{-webkit-user-select:none;user-select:none}
+main{max-width:min(1000px,100%);padding:10px 12px calc(10px + env(safe-area-inset-bottom))}
+.info{gap:5px;margin:4px 0}.chip{padding:4px 8px}
+.plist{grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:5px;margin:6px 0}.pl{padding:5px 7px;font-size:12.5px}
+.table{min-height:128px;margin:6px 0;padding:8px}
+.table .card{width:clamp(60px,17vw,92px);height:auto;aspect-ratio:787/1228}
+.pair{width:clamp(78px,22vw,118px);height:auto;aspect-ratio:.72}
+.pair .card:nth-child(2){left:24%;top:12%}
+.dock{position:sticky;bottom:0;z-index:30;margin:0 -12px;padding:6px 12px calc(8px + env(safe-area-inset-bottom));background:linear-gradient(to top,var(--bg) 85%,transparent)}
+.dock .acts{margin:4px 0}.dock .turn{margin:2px 0 4px;padding:5px 10px;font-size:17px}.dock .mid{margin:2px 0}
+.prev{min-height:0;padding:6px 8px;margin:4px 0;gap:8px;font-size:13px;align-items:center}
+.prev.slim{padding:4px 8px;min-height:0;border-style:dashed}
+.prev .card{width:60px;height:auto;aspect-ratio:787/1228;font-size:16px}
+.prev .b{padding:6px 10px;margin:4px 4px 0 0;width:auto;display:inline-block}
+.hand{display:flex;flex-wrap:nowrap;gap:0;overflow-x:auto;overflow-y:visible;padding:10px 2px 4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.hand::-webkit-scrollbar{display:none}
+.hand .card{flex:none;width:clamp(54px,15.5vw,92px);height:auto;aspect-ratio:787/1228;margin-left:calc(-1 * var(--ov,0px))}
+.hand .card:first-child{margin-left:0}
+.hand .card.sel{z-index:6;box-shadow:0 0 0 3px #fff,0 0 0 6px var(--acc),0 6px 14px #0007;transform:translateY(-8px)}
+.hand .card:active{filter:brightness(.95)}
+button.b{min-height:38px}
+#chatbox{position:static;display:none}
+#stk{position:fixed;right:12px;top:54px;bottom:auto;z-index:70}
+@media(min-width:760px){.table .card{width:100px}.pair{width:132px}.hand .card{width:96px}.prev .card{width:72px}.plist{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}.pl{font-size:14px}.chip{font-size:14px}}
+@media(max-height:480px) and (orientation:landscape){main{padding-top:4px}.dock{padding-top:2px}.prev.slim{display:none}.table{min-height:96px}.hand .card{width:clamp(44px,8vw,64px)}.pair{width:70px}.table .card{width:54px}.turn{font-size:14px}#bar{padding-top:2px}}
+@media(max-width:360px){.pl{font-size:11.5px}.chip b{font-size:17px}}
+
+.hand .card{width:clamp(54px,min(15.5vw,11vh),92px)}
+.hand{padding:6px 2px 2px}.hand+.hand{padding-top:0}
+main:has(.dock){display:flex;flex-direction:column;min-height:calc(100dvh - 54px)}
+.dock{margin-top:auto}
+@media(min-width:760px){.hand .card{width:clamp(60px,min(9vw,11vh),96px)}}
+@media(max-width:400px){.mb{width:10px;height:15px;margin-right:-3px}.pl{padding:4px 6px}.plist{grid-template-columns:repeat(auto-fit,minmax(92px,1fr))}.chip{font-size:12px;padding:3px 6px}.info{gap:4px}}
+
+@media(max-height:700px){.prev .card{display:none}.prev{padding:4px 8px;font-size:12px}.mini .mb{display:none}.mini{min-height:0;margin-top:0}.nbchip{display:none}.pl{padding:3px 6px}.plist{margin:4px 0}.info{margin:2px 0}.table{min-height:104px;margin:4px 0}.dock .turn{font-size:15px;padding:3px 8px}}
+
+#toast{position:fixed;left:50%;top:56px;transform:translateX(-50%);z-index:90;display:flex;gap:8px;align-items:center;max-width:min(92vw,420px);background:var(--card);color:var(--fg);border:2px solid var(--c,var(--line));border-radius:12px;padding:6px 10px;font-size:13px;box-shadow:0 6px 18px #0005;animation:tin .25s ease-out}
+#toast img{width:34px;border-radius:4px;flex:none}#toast span{color:var(--muted)}
+@keyframes tin{from{opacity:0;transform:translate(-50%,-8px)}to{opacity:1;transform:translate(-50%,0)}}
+body.calm .card.ab{animation:none!important;box-shadow:0 0 0 2px var(--c)!important}
+body.calm .card.img.ab::after{display:none}
+body.calm .card.tp{box-shadow:0 0 0 2px #f08a24!important}
+body.calm .card.sel{box-shadow:0 0 0 3px var(--acc)!important}
+body.calm .card.fly,body.calm .card.img.fly{animation:none!important}
+body.calm .shake{animation:none}
+body.calm .mini .mb{display:none}
+body.calm .table{background:none}
+body.calm .nbchip,body.calm .kick{display:none}
+body.calm .chip{box-shadow:none}
+body.calm.chaos::before{display:none}
+body.calm .turn{box-shadow:none}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Oswald:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 <div id="banner"></div>
-<div id="bar"><button onclick="showHelp()" title="Правила">❓</button><button onclick="showRef()" title="Справочник карт">📖</button><button onclick="showSet()" title="Настройки">⚙️</button><button id="sndb" onclick="togSnd()" title="Звук">🔊</button><button id="micb" onclick="togMic()" title="Голосовая связь">🎤</button></div>
+<div id="bar"><button onclick="showHelp()" title="Правила">❓</button><button onclick="showRef()" title="Справочник карт">📖</button><button onclick="showSet()" title="Настройки">⚙️</button><button onclick="togStk()" title="Реакции">😀</button><button id="sndb" onclick="togSnd()" title="Звук">🔊</button><button id="micb" onclick="togMic()" title="Голосовая связь">🎤</button></div>
 <main id="app"></main>
-<div id="chatbox"><div id="stk"><button onclick="sendEmo('😂')">😂</button><button onclick="sendEmo('🔥')">🔥</button><button onclick="sendEmo('😡')">😡</button><button onclick="sendEmo('👏')">👏</button><button onclick="sendEmo('😱')">😱</button><button onclick="sendEmo('💀')">💀</button><button onclick="sendEmo('👍')">👍</button><button onclick="sendEmo('😭')">😭</button></div><button id="react" onclick="togStk()">😀</button></div>
+<div id="chatbox"><div id="stk"><button onclick="sendEmo('😂')">😂</button><button onclick="sendEmo('🔥')">🔥</button><button onclick="sendEmo('😡')">😡</button><button onclick="sendEmo('👏')">👏</button><button onclick="sendEmo('😱')">😱</button><button onclick="sendEmo('💀')">💀</button><button onclick="sendEmo('👍')">👍</button><button onclick="sendEmo('😭')">😭</button></div></div>
 <script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script>
 <script>
 
@@ -221,7 +275,7 @@ let curTheme='1';
 function applyTheme(){let t='r';try{t=localStorage.getItem('rz_theme')||'r'}catch(e){}if(t==='r')t=String(1+rnd(3));curTheme=t;try{document.body.classList.remove('th1','th2','th3');document.body.classList.add('th'+t)}catch(e){}}
 function setTheme(t){try{localStorage.setItem('rz_theme',t)}catch(e){}applyTheme();home()}
 const themeHtml=()=>{let t='r';try{t=localStorage.getItem('rz_theme')||'r'}catch(e){}return `<div class="tag">Оформление</div><div class="themes">${[['r','🎲 Случайно'],['1','Пергамент'],['2','Сукно'],['3','Ночь']].map(([k,n])=>`<button class="${t===k?'on':''}" onclick="setTheme('${k}')">${n}</button>`).join('')}</div>`};
-const optsHtml=cb=>`<div class="tag">Режим</div><div class="suits" style="grid-template-columns:repeat(3,1fr)">${[['Обычный',0],['🌀 Хаос',1],['🃏 Джокеры',2]].map(([n,v])=>`<button class="b alt ${selMode===v?'on':''}" onclick="selMode=${v};${cb}">${n}</button>`).join('')}</div><div class="tag">Колода</div><div class="suits" style="grid-template-columns:repeat(2,1fr)">${[['52 карты',1],['104 карты',2]].map(([n,v])=>`<button class="b alt ${selDecks===v?'on':''}" onclick="selDecks=${v};${cb}">${n}</button>`).join('')}</div><div class="tag">Боты (компьютер)</div><div class="suits" style="grid-template-columns:repeat(4,1fr)">${[0,1,2,3].map(v=>`<button class="b alt ${botN===v?'on':''}" onclick="botN=${v};${cb}">${v}</button>`).join('')}</div><div class="tag">Правила</div><div class="suits" style="grid-template-columns:repeat(1,1fr)"><button class="b alt ${optTf?'on':''}" onclick="optTf=!optTf;${cb}">Перевод: ${optTf?'вкл':'выкл'}</button></div><div class="tag">Кто подкидывает</div><div class="suits" style="grid-template-columns:repeat(3,1fr)">${[['Все',0],['Соседи',1],['Атакующий',2]].map(([n,v])=>`<button class="b alt ${thMode===v?'on':''}" onclick="thMode=${v};${cb}">${n}</button>`).join('')}</div><p class="tag">«Соседи»: подкидывать могут только атакующий и игрок, который ходит после защищающегося.</p>`;
+const optsHtml=cb=>`<div class="tag">Режим</div><div class="suits" style="grid-template-columns:repeat(3,1fr)">${[['Обычный',0],['🌀 Хаос',1],['🃏 Джокеры',2]].map(([n,v])=>`<button class="b alt ${selMode===v?'on':''}" onclick="selMode=${v};${cb}">${n}</button>`).join('')}</div><div class="tag">Колода</div><div class="suits" style="grid-template-columns:repeat(2,1fr)">${[['52 карты',1],['104 карты',2]].map(([n,v])=>`<button class="b alt ${selDecks===v?'on':''}" onclick="selDecks=${v};${cb}">${n}</button>`).join('')}</div><div class="tag">Боты (компьютер)</div><div class="suits" style="grid-template-columns:repeat(4,1fr)">${[0,1,2,3].map(v=>`<button class="b alt ${botN===v?'on':''}" onclick="botN=${v};${cb}">${v}</button>`).join('')}</div><div class="tag">Добивать ботами до</div><div class="suits" style="grid-template-columns:repeat(5,1fr)">${[[0,'выкл'],[3,'3'],[4,'4'],[5,'5'],[6,'6']].map(([v,n])=>`<button class="b alt ${fillTo===v?'on':''}" onclick="fillTo=${v};${cb}">${n}</button>`).join('')}</div><p class="tag">Если людей меньше, недостающих сразу заменят боты.</p><div class="tag">Правила</div><div class="suits" style="grid-template-columns:repeat(2,1fr)"><button class="b alt ${optTf?'on':''}" onclick="optTf=!optTf;${cb}">Перевод: ${optTf?'вкл':'выкл'}</button><button class="b alt ${optRb?'on':''}" onclick="optRb=!optRb;${cb}">Бот за вышедшего: ${optRb?'вкл':'выкл'}</button></div><div class="tag">Кто подкидывает</div><div class="suits" style="grid-template-columns:repeat(3,1fr)">${[['Все',0],['Соседи',1],['Атакующий',2]].map(([n,v])=>`<button class="b alt ${thMode===v?'on':''}" onclick="thMode=${v};${cb}">${n}</button>`).join('')}</div><p class="tag">«Соседи»: подкидывать могут только атакующий и игрок, который ходит после защищающегося.</p>`;
 
 const dsc=e=>e.split('+').map(t=>DESC[t]).join(' · ');
 const PT=[['⚔️','💥','🔩'],['❤️','✨','💗'],['💎','⏳','🪙'],['🌿','⚡','🍃']];
@@ -230,7 +284,7 @@ const $=document.getElementById('app');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const rnd=n=>Math.floor(Math.random()*n);
 
-let S=null,lastG=null,selSu=4,seenFx=-1,curGid=0,sel=null,selS=[],myIdx=-1,wasMy=false,infoC=null,selTm=0,selMode=0,selDecks=1,optTf=false,optTh=true,thMode=0,botN=0,snd=true,micS=null,vcalls={},plist=[],snap=null,isBackup=false,retry=0,chat=[],prevTb=new Set(),lastLg='',overGid=0,skew=0,everConn=false,lostFlag=false,err='',code='',myName='',peer=null,hostConn=null,isHost=false,LB=[],LN=[];
+let S=null,lastG=null,selSu=4,seenFx=-1,curGid=0,sel=null,selS=[],myIdx=-1,wasMy=false,infoC=null,selTm=0,selMode=0,selDecks=1,optTf=false,optTh=true,thMode=0,botN=0,fillTo=0,optRb=true,snd=true,micS=null,vcalls={},plist=[],snap=null,isBackup=false,retry=0,chat=[],prevTb=new Set(),lastLg='',overGid=0,skew=0,everConn=false,lostFlag=false,err='',code='',myName='',peer=null,hostConn=null,isHost=false,LB=[],LN=[];
 const MAXP=8,PREF='rzkdurak-';
 const TV={dr:['💨','🗑️'],gv:['✉️','🃏'],ga:['🎁','🎁'],pn:['🃏','⬇️'],pa:['🃏','☠️'],bo:['🔥','💥'],ba:['🔥','☄️'],b2:['💥','🔥'],pm:['🃏','🃏'],cd:['🔋','💨'],c2:['🔋','⚡'],ca:['🔋','☠️'],fz:['⛓️','🔒'],sk:['⏩','⏱️'],rv:['🔄','🌀'],sw:['🔀','🤝'],tr:['👑','🌈'],lk:['❄️','🔇'],ch:['⚡','🔋'],wd:['🛡️','⚔️'],rf:['🪞','↩️'],cap:['🚧','🔢'],ban:['🚫','🎯'],wk:['📉','💧'],st:['📈','✨'],lt:['🎲','🃏'],cr:['🎠','🔄'],eq:['⚖️','🃏'],gm:['🎰','🍀'],xc:['🤝','💱'],rev:['👁️','🔍'],pk:['🔮','✨'],sh:['🛡️','💠'],gy:['⚰️','👻'],ec:['🔁','📣']};
 const MV={dr:'u',gv:'s',ga:'s',pn:'d',pa:'d',bo:'u',ba:'u',b2:'u',pm:'d',cd:'d',c2:'d',ca:'d',fz:'d',sk:'s',rv:'r',sw:'s',tr:'u',lk:'d',ch:'u',wd:'r',rf:'s',cap:'d',ban:'d',wk:'d',st:'u',lt:'s',cr:'r',eq:'r',gm:'u',xc:'s',rev:'r',pk:'u',sh:'r',gy:'d',ec:'r'};
@@ -327,11 +381,11 @@ const tmBtns=cb=>`<div class="tag">⏱ Таймер хода:</div><div class="s
 let uid=(()=>{try{let u=sessionStorage.getItem('rz_uid');if(!u){u=Math.random().toString(36).slice(2,10);sessionStorage.setItem('rz_uid',u)}return u}catch(e){return Math.random().toString(36).slice(2,10)}})();
 const $e=id=>document.getElementById(id);
 function banner(t){const b=$e('banner');if(!b)return;b.textContent=t||'';b.style.display=t?'block':'none'}
-function start(){const chaos=selMode===1,ns=chaos?-1:selSu===4?(()=>{let x;do x=rnd(4);while(S&&x===S.su);return x})():selSu;const ps=LB.slice(0,MAXP),nb=Math.min(botN,MAXP-ps.length),n=ps.length+nb,d=[...Array(selDecks===2?104:52).keys(),...(selMode===2?(selDecks===2?[500,501,502,503]:[500,501]):[])];do{for(let i=d.length-1;i>0;i--){const j=rnd(i+1);[d[i],d[j]]=[d[j],d[i]]}}while(su(d[0])===ns||JK(d[0]));
+function start(){const chaos=selMode===1,ns=chaos?-1:selSu===4?(()=>{let x;do x=rnd(4);while(S&&x===S.su);return x})():selSu;const ps=LB.slice(0,MAXP),nb=Math.min(Math.max(botN,fillTo-ps.length),MAXP-ps.length),n=ps.length+nb,d=[...Array(selDecks===2?104:52).keys(),...(selMode===2?(selDecks===2?[500,501,502,503]:[500,501]):[])];do{for(let i=d.length-1;i>0;i--){const j=rnd(i+1);[d[i],d[j]]=[d[j],d[i]]}}while(su(d[0])===ns||JK(d[0]));
  LB.forEach(e=>e.idx=-1);ps.forEach((e,i)=>e.idx=i);
- S={gid:Date.now(),ph:'play',su:ns,cm:chaos?Array.from({length:13},()=>rnd(4)):null,nd:d.length,jm:selMode===2,opts:{tf:optTf,th:thMode!==2,nb:thMode===1},tr:su(d[0]),dk:d,n,nm:[...ps.map(e=>e.name),...Array.from({length:nb},(_,k)=>'Бот '+(k+1))],uid:[...ps.map(e=>e.uid),...Array.from({length:nb},(_,k)=>'bot'+(k+1))],bot:[...ps.map(()=>false),...Array.from({length:nb},()=>true)],off:[],tm:selTm,dl:0,sg:'',h:Array.from({length:n},()=>[]),tb:[],at:rnd(n),dr:1,ch:Array(n).fill(1),cr:0,out:[],lv:[],dc:[],tp:null,fr:Array(n).fill(0),cs:Array(n).fill(false),cx:Array(n).fill(0),ps:[],tk:false,lg:[],vc:Array.from({length:n},()=>[]),pk:[],sh:Array(n).fill(false),bn:null,cap:0,last:'',ua:[],fz:false,sk:-1,lk:false,lm:-1,bk:null,fx:null,lz:-1};
+ S={gid:Date.now(),ph:'play',su:ns,cm:chaos?Array.from({length:13},()=>rnd(4)):null,nd:d.length,jm:selMode===2,opts:{tf:optTf,th:thMode!==2,nb:thMode===1,rb:optRb},tr:su(d[0]),dk:d,n,nm:[...ps.map(e=>e.name),...Array.from({length:nb},(_,k)=>'Бот '+(k+1))],uid:[...ps.map(e=>e.uid),...Array.from({length:nb},(_,k)=>'bot'+(k+1))],bot:[...ps.map(()=>false),...Array.from({length:nb},()=>true)],rp:[],off:[],tm:selTm,dl:0,sg:'',h:Array.from({length:n},()=>[]),tb:[],at:rnd(n),dr:1,ch:Array(n).fill(1),cr:0,out:[],lv:[],dc:[],tp:null,fr:Array(n).fill(0),cs:Array(n).fill(false),cx:Array(n).fill(0),ps:[],tk:false,lg:[],vc:Array.from({length:n},()=>[]),pk:[],sh:Array(n).fill(false),bn:null,cap:0,last:'',ua:[],fz:false,sk:-1,lk:false,lm:-1,bk:null,fx:null,lz:-1};
  for(let i=0;i<n;i++)S.h[i]=S.dk.splice(-6);sel=null;LOCKED=true;pub()}
-function V(i){return {...S,you:i,now:Date.now(),uid:[],dk:S.dk.map(c=>S.pk.includes(c)?c:-1),h:S.h.map((x,j)=>j===i?x:x.map(c=>S.vc[j].includes(c)?c:-1)),bk:!!S.bk,dc:[]}}
+function V(i){return {...S,you:i,now:Date.now(),uid:[],adm:{},dk:S.dk.map(c=>S.pk.includes(c)?c:-1),h:S.h.map((x,j)=>j===i?x:x.map(c=>S.vc[j].includes(c)?c:-1)),bk:!!S.bk,dc:[]}}
 function stamp(){const sg=[S.at,S.tb.length,S.tb.filter(x=>x[1]>=0).length,S.tk,S.ps.length,S.ph,S.dr].join();if(sg!==S.sg){S.sg=sg;S.dl=S.tm&&S.ph==='play'?Date.now()+S.tm*1000:0}}
 function pub(){clean();stamp();for(const e of LB){const v=V(e.idx);if(e.c)e.c.send({t:'view',g:v});else render(v)}
  const b=LB.find(e=>e.c&&e.idx>=0);if(b)b.c.send({t:'snap',S:S})}
@@ -341,22 +395,24 @@ function setupCalls(){peer.on('call',call=>{call.answer(micS||undefined);call.on
 function openHost(first){peer=new Peer(PREF+code,peerOpts());if(first)connT=setTimeout(()=>{if(!isHost){err='Нет связи с сервером соединений. Проверь интернет и попробуй ещё раз.';try{peer.destroy()}catch(e){}home()}},12000);setupCalls();
  peer.on('open',()=>{clearTimeout(connT);isHost=true;retry=0;banner('');saveLast();$e('chatbox').style.display='block';
   if(first){LB=[{c:null,name:myName,uid,idx:0}];S=null;lastG=null}
-  else{ROOMKEY=newKey();LOCKED=true;S=snap;const mi=S?S.uid.indexOf(uid):-1;LB=[{c:null,name:myName,uid,idx:mi}];if(S){S.off=[...Array(S.n).keys()].filter(i=>i!==mi&&!S.lv.includes(i)&&!(S.bot&&S.bot[i]));S.off.forEach(i=>setTimeout(()=>offGrace(i),120000))}}
+  else{ROOMKEY=newKey();LOCKED=true;S=snap;if(S&&S.adm)Object.entries(S.adm).forEach(([k,v])=>ADMIT.set(k,v));const mi=S?S.uid.indexOf(uid):-1;LB=[{c:null,name:myName,uid,idx:mi}];if(S){S.off=[...Array(S.n).keys()].filter(i=>i!==mi&&!S.lv.includes(i)&&!(S.bot&&S.bot[i]));S.off.forEach(i=>setTimeout(()=>offGrace(i),120000))}}
   bLobby();bPl();if(S)pub();else draw(null)});
  peer.on('error',e=>{if(e.type==='unavailable-id'){if(first){err='Этот код уже занят, попробуй ещё раз.';home()}else if(retry++<40){try{peer.destroy()}catch(x){}setTimeout(()=>openHost(false),3000)}else{err='Не удалось взять комнату на себя.';home()}}else if(first){err='Ошибка сети: '+e.type;home()}});
  peer.on('connection',c=>{c.on('data',d=>hostMsg(c,d));c.on('close',()=>drop(c));c.on('error',()=>drop(c))})}
 function hostMsg(c,d){if(!d)return;
- if(d.t==='hello'){if(BAN.has(String(d.uid||''))){try{c.send({t:'kicked'})}catch(e){}setTimeout(()=>{try{c.close()}catch(e){}},150);return}const why=admit(d);if(why){try{c.send({t:'denied',why})}catch(e){}setTimeout(()=>{try{c.close()}catch(e){}},150);return}let e=LB.find(x=>x.c===c);if(!e){e={c,name:String(d.name||'Игрок').slice(0,16),uid:String(d.uid||''),idx:-1};
-   if(S){const i=findIdx(d);if(i>=0){e.idx=i;S.uid[i]=e.uid;S.off=S.off.filter(x=>x!==i)}}const dq=LB.findIndex(x=>x.uid&&x.uid===e.uid&&x.c&&x.c!==c);if(dq>=0){try{LB[dq].c.close()}catch(x){}LB.splice(dq,1)}LB.push(e)}
+ if(d.t==='hello'){if(BAN.has(String(d.uid||''))){try{c.send({t:'kicked'})}catch(e){}setTimeout(()=>{try{c.close()}catch(e){}},150);return}const why=admit(d);if(why){try{c.send({t:'denied',why})}catch(e){}setTimeout(()=>{try{c.close()}catch(e){}},150);return}ADMIT.set(String(d.uid||''),String(d.name||'Игрок').slice(0,16));if(S)S.adm=Object.fromEntries(ADMIT);let e=LB.find(x=>x.c===c);if(!e){e={c,name:String(d.name||'Игрок').slice(0,16),uid:String(d.uid||''),idx:-1};
+   if(S){const i=findIdx(d);if(i>=0){e.idx=i;S.uid[i]=e.uid;S.off=S.off.filter(x=>x!==i);if(S.rp&&S.rp.includes(i)){S.bot[i]=false;S.rp=S.rp.filter(x=>x!==i);S.nm[i]=S.nm[i].replace(/ \(бот\)$/,'')}}}const dq=LB.findIndex(x=>x.uid&&x.uid===e.uid&&x.c&&x.c!==c);if(dq>=0){try{LB[dq].c.close()}catch(x){}LB.splice(dq,1)}LB.push(e)}
   bLobby();bPl();if(S)pub();else draw(null)}
  else if(d.t==='mv'&&S){const e=LB.find(x=>x.c===c);if(e&&e.idx>=0)apply(e.idx,d.m)}
  else if(d.t==='chat'||d.t==='emo'){const e=LB.find(x=>x.c===c);if(e)bcast({t:'msg',n:e.name,x:d.x?String(d.x).slice(0,120):'',e:d.e?String(d.e).slice(0,4):''})}}
 function bcast(m){LB.forEach(e=>e.c&&e.c.send(m));onMsg(m)}
 function leave(i){S.out.push(i);S.lv.push(i);S.h[i]=[];S.tb=[];S.ps=[];S.tk=false;S.fz=false;S.bk=null;S.lm=-1;
  const al=[...Array(S.n).keys()].filter(j=>alive(j));if(al.length<=1){S.ph='over';S.lz=al.length?al[0]:-1}else if(!alive(S.at))S.at=nxt(S.at)}
-function offGrace(i){if(S&&S.ph==='play'&&S.off.includes(i)&&alive(i)){S.off=S.off.filter(x=>x!==i);leave(i);pub()}}
+
+function toBot(i){S.off=S.off.filter(x=>x!==i);if(!S.bot[i]){S.bot[i]=true;if(!S.rp.includes(i))S.rp.push(i);S.nm[i]=S.nm[i]+' (бот)';lg('🤖 '+S.nm[i]+' заменяет игрока')}}
+function offGrace(i){if(S&&S.ph==='play'&&S.off.includes(i)&&alive(i)){S.off=S.off.filter(x=>x!==i);if(S.opts&&S.opts.rb)toBot(i);else leave(i);pub()}}
 function drop(c){const k=LB.findIndex(x=>x.c===c);if(k<0)return;const e=LB.splice(k,1)[0];bPl();
- if(S&&e.idx>=0&&S.ph==='play'&&alive(e.idx)){if(!S.off.includes(e.idx))S.off.push(e.idx);setTimeout(()=>offGrace(e.idx),120000);pub()}
+ if(S&&e.idx>=0&&S.ph==='play'&&alive(e.idx)){if(!S.off.includes(e.idx))S.off.push(e.idx);setTimeout(()=>offGrace(e.idx),S.opts&&S.opts.rb?25000:120000);pub()}
  else bLobby()}
 function joinGame(){peer=new Peer(undefined,peerOpts());setupCalls();banner('Связь с сервером…');connT=setTimeout(()=>diag('srv'),12000);
  peer.on('open',()=>{clearTimeout(connT);banner('Ищу комнату…');connectHost();connT=setTimeout(()=>{if(!everConn)diag('ice')},18000)});
@@ -368,7 +424,7 @@ function retryConnect(){if(retry++<80){banner('Переподключаюсь…
 function lost(){if(isHost||lostFlag||kickedFlag)return;if(!everConn&&!isBackup){diag('ice');return}lostFlag=true;setTimeout(()=>{lostFlag=false},600);
  if(isBackup&&snap){banner('Хост пропал: беру комнату на себя…');setTimeout(()=>{try{peer.destroy()}catch(e){}openHost(false)},1500)}else retryConnect()}
 function guestMsg(d){if(!d)return;if(d.t==='denied'){kickedFlag=true;banner('');err=d.why||'Вход запрещён.';try{hostConn.close()}catch(e){}home();return}if(d.t==='closed'){try{localStorage.removeItem('rz_last')}catch(e){}kickedFlag=true;banner('');err='Хозяин закрыл комнату.';try{hostConn.close()}catch(e){}home();return}if(d.t==='kicked'){try{localStorage.removeItem('rz_last')}catch(e){}kickedFlag=true;banner('');err='Хозяин удалил тебя из комнаты.';try{hostConn.close()}catch(e){}home();return}banner('');if((d.t==='lobby'||d.t==='view')&&!sv){sv=true;saveLast()}if(d.t==='lobby'){LN=d.names;if(!lastG)draw(null)}else if(d.t==='view')render(d.g);else if(d.t==='snap'){snap=d.S;isBackup=true}else if(d.t==='pl'){plist=d.ids;voiceSync()}else if(d.t==='msg')onMsg(d)}
-function create(){if(!isOwner){err='Создавать комнаты может только хозяин игры.';return home()}myName=getName();if(!myName){err='Введи имя.';return home()}code=Math.random().toString(36).slice(2,7);err='Создаю комнату…';home();ROOMKEY=newKey();KEYEXP=Date.now()+30*60*1000;LOCKED=false;history.replaceState(null,'','#'+code+'.'+ROOMKEY);openHost(true)}
+function create(){if(!isOwner){err='Создавать комнаты может только хозяин игры.';return home()}myName=getName();if(!myName){err='Введи имя.';return home()}code=Math.random().toString(36).slice(2,7);err='Создаю комнату…';home();ADMIT.clear();BAN.clear();ROOMKEY=newKey();KEYEXP=Date.now()+30*60*1000;LOCKED=false;history.replaceState(null,'','#'+code+'.'+ROOMKEY);openHost(true)}
 function join(){kickedFlag=false;everConn=false;joinKey=ckey();sv=false;{const L=getLast();if(L&&L.code===cl()){uid=L.uid;try{sessionStorage.setItem('rz_uid',uid)}catch(e){}}}myName=getName();code=cl();if(!myName||!code){err='Нужно имя и ссылка с кодом комнаты.';return home()}err='Подключаюсь…';home();joinGame()}
 function send(m){if(isHost){const me=LB.find(e=>!e.c);apply(me?me.idx:0,m)}else if(hostConn)hostConn.send({t:'mv',m})}
 function copyLink(){try{navigator.clipboard.writeText(link()).then(()=>{const c=$e('cp');if(c)c.textContent='Скопировано ✅'})}catch(e){const l=$e('lk');if(l)l.select()}}
@@ -539,7 +595,7 @@ function fxCanvas(d,f){let cv,cx;try{cv=document.createElement('canvas');cx=cv.g
    else if(p.m==='slash'){cx.lineWidth=2;cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(p.x-p.len,p.y-p.len);cx.stroke()}
    else{const s=p.m==='twinkle'?p.sz*(1+Math.sin(t*9))*1.2:p.sz;shp(cx,p.sh,p.x,p.y,s,p.rot);cx.globalAlpha=al*.22;cx.beginPath();cx.arc(p.x,p.y,s*2.6,0,6.28);cx.fill()}}
   if(fr<130)requestAnimationFrame(loop)})()}
-function showFx(f){const d=document.createElement('div');d.id='fx';d.className='s'+f.s+' t'+f.k;
+function showFx(f){if(fxLevel<2){if(fxLevel===1)toast(f);sfx(f.s,f.k,f.e,f.c);return}const d=document.createElement('div');d.id='fx';d.className='s'+f.s+' t'+f.k;
  const key=f.c!==undefined?artKey(f.c):'',sg=f.c!==undefined?sigOf(f.c).split('/'):['',''];
  d.innerHTML=(key?`<img class="fxc" src="cards/${key}.jpg" alt="">`:'')+`<b>${esc(f.t)}</b><span>${esc(f.d)}</span>`+(sg[0]==='lightning'||sg[1]==='flash'||sg[1]==='blast'||sg[1]==='thunder'?'<div class="flashov"></div>':'');
  document.body.appendChild(d);fxCanvas(d,f);sfx(f.s,f.k,f.e,f.c);if(f.k>1||sg[1]==='blast'||sg[1]==='thunder')$.classList.add('shake');setTimeout(()=>{d.remove();$.classList.remove('shake')},1900)}
@@ -560,16 +616,16 @@ const backsHtml=()=>{const k=applyBack();return `<div class="tag">Рубашка
 const OWNER_HASH='198899b8eae4f52094e6f52fc0f5a389702e750e74a1772e2104d8d0828e8488';let isOwner=false,kickedFlag=false;const BAN=new Set();try{isOwner=localStorage.getItem('rz_owner')==='1'}catch(e){}
 function ownerCheck(){const h=location.hash.slice(1);if(!h.startsWith('owner='))return;const tok=h.slice(6);
  try{crypto.subtle.digest('SHA-256',new TextEncoder().encode(tok)).then(b=>{const hx=[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');if(hx===OWNER_HASH){isOwner=true;try{localStorage.setItem('rz_owner','1')}catch(e){}history.replaceState(null,'',location.pathname+location.search);err='';home()}else{err='Неверная ссылка хозяина.';home()}})}catch(e){err='Не удалось проверить ссылку хозяина (нужен https).';home()}}
-function kickConn(e){BAN.add(e.uid);try{e.c.send({t:'kicked'})}catch(x){}
- if(S&&e.idx>=0&&S.ph==='play'&&alive(e.idx))leave(e.idx);
+function kickConn(e){BAN.add(e.uid);ADMIT.delete(e.uid);if(S&&S.adm)delete S.adm[e.uid];try{e.c.send({t:'kicked'})}catch(x){}
+ if(S&&e.idx>=0&&S.ph==='play'&&alive(e.idx)){if(S.opts&&S.opts.rb){toBot(e.idx);S.rp=S.rp.filter(x=>x!==e.idx);S.uid[e.idx]='kicked'+e.idx}else leave(e.idx)}
  const c=e.c;setTimeout(()=>{try{c.close()}catch(x){}},150);
  const k=LB.indexOf(e);if(k>=0)LB.splice(k,1);bPl();if(S)pub();else bLobby()}
 function kickEntry(i){const e=LB[i];if(!isHost||!e||!e.c||!confirm('Удалить игрока «'+e.name+'»?'))return;kickConn(e)}
 function kickPlayer(i){const e=LB.find(x=>x.idx===i&&x.c);if(!isHost||!e||!confirm('Удалить игрока «'+e.name+'»?'))return;kickConn(e)}
 const specHtml=()=>{const sp=LB.map((e,k)=>[e,k]).filter(([e])=>e.c&&e.idx<0);return sp.length?`<div class="tag">Зрители: ${sp.map(([e,k])=>esc(e.name)+` <button class="kick" onclick="kickEntry(${k})">✕</button>`).join(' · ')}</div>`:''};
-const VER='25.10 17:44 · проверка связи';function ownerOff(){try{localStorage.removeItem('rz_owner')}catch(e){}isOwner=false;home()}
-let ROOMKEY='',KEYEXP=0,LOCKED=false;const newKey=()=>Math.random().toString(36).slice(2,10);
-function admit(d){const u=String(d.uid||'');if(findIdx(d)>=0)return null;
+const VER='26.10 07:03 · спокойный вид';function ownerOff(){try{localStorage.removeItem('rz_owner')}catch(e){}isOwner=false;home()}
+let ROOMKEY='',KEYEXP=0,LOCKED=false;const ADMIT=new Map();const newKey=()=>Math.random().toString(36).slice(2,10);
+function admit(d){if(ADMIT.has(String(d.uid||'')))return null;{const nm=String(d.name||'').trim().toLowerCase();if(nm&&[...ADMIT.values()].some(v=>v.toLowerCase()===nm)&&!LB.some(e=>e.c&&e.name.toLowerCase()===nm))return null}const u=String(d.uid||'');if(findIdx(d)>=0)return null;
  if(LOCKED)return 'Вход в комнату закрыт хозяином.';
  if(String(d.key||'')!==ROOMKEY||Date.now()>KEYEXP)return 'Ссылка устарела. Попроси у хозяина новую.';return null}
 function newLink(){ROOMKEY=newKey();KEYEXP=Date.now()+30*60*1000;LOCKED=false;try{history.replaceState(null,'','#'+code+'.'+ROOMKEY)}catch(e){}draw(lastG)}
@@ -587,19 +643,29 @@ function musicTick(){if(!music||!snd||!ac())return;let key=curTheme;try{if(docum
  pad(r,5,.025,key==='c'?'sawtooth':'sine');pad(r*1.5,5,.02,'triangle');pad(r*(key==='c'?1.414:2),5,.015,'sine');if(rnd(3)===0)setTimeout(()=>pad(sc[rnd(sc.length)]*2,2.5,.02,'sine'),800+rnd(2000))}
 function setVol(v){vol=v/100;try{localStorage.setItem('rz_vol',String(vol))}catch(e){}if(MG)MG.gain.value=vol}
 function setMusic(on){music=on;try{localStorage.setItem('rz_music',on?'1':'0')}catch(e){}if(on)ac()}
+let fxLevel=1,calm=false;
+function applyCalm(){try{document.body.classList.toggle('calm',calm)}catch(e){}}
+function setFx(v){fxLevel=v;try{localStorage.setItem('rz_fx',String(v))}catch(e){}showSet();showSet()}
+function setCalm(on){calm=on;try{localStorage.setItem('rz_calm',on?'1':'0')}catch(e){}applyCalm()}
+const fxControls=()=>`<div class="tag">Эффекты способностей</div><div class="rtabs">${[[2,'Полные'],[1,'Лёгкие'],[0,'Выкл']].map(([v,n])=>`<button class="${fxLevel===v?'on':''}" style="font-size:14px" onclick="setFx(${v})">${n}</button>`).join('')}</div><label class="tag" style="display:block;margin:8px 0"><input type="checkbox" ${calm?'checked':''} onchange="setCalm(this.checked)" style="width:auto;margin-right:8px">Спокойный вид (меньше свечения и мелких деталей)</label>`;
+function toast(f){const old=$e('toast');if(old)old.remove();const d=document.createElement('div');d.id='toast';d.className='s'+f.s;const key=f.c!==undefined?artKey(f.c):'';
+ d.innerHTML=(key?`<img src="cards/${key}.jpg" alt="">`:'')+`<div><b>${esc(f.t)}</b><br><span>${esc(f.d)}</span></div>`;document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}
 function showSet(){let d=$e('set');if(d){d.remove();return}d=document.createElement('div');d.id='set';d.className='ovl';
- d.innerHTML=`<div class="box"><h2>Настройки</h2><div class="tag">Общая громкость</div><input type="range" min="0" max="100" value="${Math.round(vol*100)}" oninput="setVol(this.value)" style="padding:0;border:0"><label class="tag"><input type="checkbox" ${music?'checked':''} onchange="setMusic(this.checked)" style="width:auto;margin-right:8px">Фоновая музыка (создаётся прямо в игре)</label><button class="b" onclick="document.getElementById('set').remove()">Готово</button></div>`;document.body.appendChild(d)}
+ d.innerHTML=`<div class="box"><h2>Настройки</h2>${fxControls()}<div class="tag">Общая громкость</div><input type="range" min="0" max="100" value="${Math.round(vol*100)}" oninput="setVol(this.value)" style="padding:0;border:0"><label class="tag"><input type="checkbox" ${music?'checked':''} onchange="setMusic(this.checked)" style="width:auto;margin-right:8px">Фоновая музыка (создаётся прямо в игре)</label><button class="b" onclick="document.getElementById('set').remove()">Готово</button></div>`;document.body.appendChild(d)}
 function showRef(){let d=$e('ref');if(d)d.remove();d=document.createElement('div');d.id='ref';d.className='ovl';
  const tabs=[0,1,2,3,4].map(i=>`<button class="${refSuit===i?'on':''}" onclick="refSuit=${i};showRef()">${i<4?SY[i]:'🃏'}</button>`).join('');
  const body=refSuit<4?ABIL[refSuit].map((a,i)=>`<div class="rrow"><img src="cards/${SL[refSuit]}-${ARTK[i]}.jpg" alt=""><div><b>${RK[i]}${SY[refSuit]} ${esc(a[1])}</b>${a[2]>0?' · ⚡'+fmt(a[2]):''}<br><span>${dsc(a[0])}</span></div></div>`).join(''):['color','bw'].map((k,j)=>`<div class="rrow"><img src="cards/joker-${k}.jpg" alt=""><div><b>${j?'Тень':'Король-шут'}</b><br>${JEV[j].map(e=>`<span>• <b>${esc(e.n)}</b>: ${esc(e.d)}</span><br>`).join('')}</div></div>`).join('')+'<p class="tag">Джокеры есть только в режиме «Джокеры». При розыгрыше срабатывает одно случайное событие из пяти.</p>';
  d.innerHTML=`<div class="box"><h2>Справочник карт</h2><div class="rtabs">${tabs}</div>${body}<button class="b" onclick="document.getElementById('ref').remove()">Закрыть</button></div>`;document.body.appendChild(d)}
 function flyFrom(el,r){if(!el||!r)return;const b=el.getBoundingClientRect();el.style.setProperty('--fx',(r.left-b.left)+'px');el.style.setProperty('--fy',(r.top-b.top)+'px');el.classList.remove('fly');void el.offsetWidth;el.classList.add('fly')}
+function fitHand(){document.querySelectorAll('.hand').forEach(h=>{const cs=[...h.children];if(cs.length<2){h.style.setProperty('--ov','0px');return}
+ const w=cs[0].getBoundingClientRect().width,C=h.clientWidth-4,need=cs.length*w;let ov=need>C?(need-C)/(cs.length-1):0;ov=Math.min(ov,w*.68);h.style.setProperty('--ov',ov.toFixed(1)+'px')})}
+try{window.addEventListener('resize',()=>{try{fitHand()}catch(e){}})}catch(e){}
 function animateNew(oldTb){const g=lastG;if(!g)return;const fresh=g.gid!==dealGid;dealGid=g.gid;
  document.querySelectorAll('.table .card[data-c]').forEach(el=>{const c=+el.dataset.c;if(oldTb&&oldTb.has(c))return;let r=null;
   if(lastRect&&Date.now()-lastRectT<2500)r=lastRect;else{const bx=document.querySelector(el.parentElement.children[1]===el?'.pl.df':'.pl.at');r=bx&&bx.getBoundingClientRect()}flyFrom(el,r)});
  lastRect=null;
  if(fresh){const dk=document.querySelector('.bksm');if(dk){const r=dk.getBoundingClientRect();document.querySelectorAll('.hand .card').forEach((el,i)=>{el.style.animationDelay=(i*70)+'ms';flyFrom(el,r)})}}}
-function findIdx(d){if(!S||!S.uid)return -1;const u=String(d.uid||'');let i=S.uid.indexOf(u);if(i>=0&&!S.lv.includes(i))return i;const nm=String(d.name||'').trim().toLowerCase();return S.nm.findIndex((n,k)=>n.toLowerCase()===nm&&S.off.includes(k)&&!S.lv.includes(k))}
+function findIdx(d){if(!S||!S.uid)return -1;const u=String(d.uid||'');let i=S.uid.indexOf(u);if(i>=0&&!S.lv.includes(i))return i;const nm=String(d.name||'').trim().toLowerCase();return S.nm.findIndex((n,k)=>n.toLowerCase().replace(/ \(бот\)$/,'')===nm&&(S.off.includes(k)||(S.rp&&S.rp.includes(k)))&&!S.lv.includes(k))}
 function saveLast(){try{localStorage.setItem('rz_last',JSON.stringify({code,key:isHost?ROOMKEY:joinKey,name:myName,uid,t:Date.now()}))}catch(e){}}
 function getLast(){try{const r=JSON.parse(localStorage.getItem('rz_last')||'null');return r&&Date.now()-r.t<8*3600*1000?r:null}catch(e){return null}}
 function rejoin(){const r=getLast();if(!r)return;code=r.code;myName=r.name;uid=r.uid;try{sessionStorage.setItem('rz_uid',uid)}catch(e){}joinKey=r.key||'';kickedFlag=false;everConn=false;sv=false;err='Подключаюсь…';home();joinGame()}
@@ -619,7 +685,7 @@ async function netTest(){const d=document.createElement('div');d.id='nt';d.class
  const r=$e('ntr');if(r)r.innerHTML=out.map(esc).join('<br>')+'<p class="tag">Если у тебя всё ✅, а у друга нет, проблема в его сети. Попроси его сделать такую же проверку и прислать результат.</p>'}
 function home(){const hc=cl();
  $.innerHTML=`<h1>🃏 Дурак: Старшая карта</h1><p class="tag">Дурак со способностями карт. 2–8 игроков.</p>${backsHtml()}${themeHtml()}
- <input id="nm" maxlength="16" placeholder="Твоё имя" value="${esc(myName)}">${hc?`<button class="b" onclick="join()">Войти в комнату ${esc(hc)}</button>`:(getLast()?`<button class="b" onclick="rejoin()">↩ Вернуться в комнату ${esc(getLast().code)}</button>`:'')}
+ <input id="nm" maxlength="16" placeholder="Твоё имя" value="${esc(myName)}">${hc?`<button class="b" onclick="join()">Войти в комнату ${esc(hc)}</button>${(()=>{const L=getLast();return L&&L.code===hc?'<p class="tag">✅ Твоё место в этой комнате сохранено: просто нажми «Войти».</p>':''})()}`:(getLast()?`<button class="b" onclick="rejoin()">↩ Вернуться в комнату ${esc(getLast().code)}</button>`:'')}
  ${isOwner?`<button class="b ${hc?'alt':''}" onclick="create()">Создать новую комнату</button><p class="tag">👑 Режим хозяина · <a href="#" onclick="ownerOff();return false">выйти</a></p>`:(hc?'':'<p class="tag">Чтобы сыграть, открой ссылку-приглашение от хозяина игры.</p>')}<p class="err">${esc(err)}</p><button class="b alt" onclick="netTest()">🔧 Проверить соединение</button><p class="tag" style="opacity:.55;font-size:11px">версия ${VER}</p>`}
 function draw(g){
  const mi=g?g.you:-1;myIdx=mi;let h='';
@@ -627,7 +693,7 @@ function draw(g){
   h+=`<h1>Комната ${esc(code)}</h1><p class="tag">Отправь ссылку друзьям.</p>
   <div class="copy"><input id="lk" readonly value="${esc(link())}" onclick="this.select()"><button class="b" id="cp" onclick="copyLink()">Копировать</button></div>${isHost?`<div class="acts"><button class="b alt" onclick="newLink()">🔄 Новая ссылка</button><button class="b alt" onclick="togLock()">${LOCKED?'🔒 Вход закрыт':'🔓 Вход открыт'}</button></div><p class="tag">Ссылка действует 30 минут и перестаёт работать после старта игры.</p>`:''}
   <div class="plist">${(isHost?LB.map(e=>e.name):LN).map((n,i,arr)=>`<div class="pl">${i<MAXP?'':'👀 '}${esc(n)}${i===0?' 👑':''}${arr.filter(z=>z===n).length>1?' ⚠️':''}${isHost&&i>0?`<button class="kick" onclick="kickEntry(${i})">✕</button>`:''}</div>`).join('')}</div>`;
-  if(isHost&&LB.length+botN>=2){h+=`${optsHtml('draw(null)')}${selMode===1?'':`<p><b>Масть со способностями:</b></p>${suBtns('draw(null)')}`}
+  if(isHost&&Math.max(LB.length+botN,fillTo)>=2){h+=`${optsHtml('draw(null)')}${selMode===1?'':`<p><b>Масть со способностями:</b></p>${suBtns('draw(null)')}`}
   ${selMode===1?'<p class="tag">🌀 Хаос: у каждого достоинства (2…Т) случайная масть, и способность есть только у этой одной карты.</p>':selSu<4?`<details><summary>Способности ${SY[selSu]} ${SN[selSu]}</summary>${ABIL[selSu].map((a,i)=>`${RK[i]}${SY[selSu]} ${a[2]>0?'⚡'+fmt(a[2]):''}<b>${esc(a[1])}</b>: ${dsc(a[0])}`).join('<br>')}</details>`:'<p class="tag">🎲 Масть со способностями выберется случайно в начале каждой партии.</p>'}${tmBtns('draw(null)')}<button class="b" onclick="start()">Начать игру</button>`}
   else if(isHost)h+=`<p class="tag">Ждём хотя бы одного игрока…</p>`;else h+=`<p class="tag">Ждём, пока хост начнёт игру.</p>`;
   return $.innerHTML=h}
@@ -637,10 +703,11 @@ function draw(g){
  const face=c=>`<span class="mf ${su(c)===1||su(c)===2?'r':''} ${su(c)===g.tr?'tp':''}">${cn(c)}</span>`;
  const mini=i=>{if(i===mi)return '';const H=g.h[i],f=H.filter(c=>c>=0),b=H.length-f.length;return `<div class="mini">${f.map(face).join('')}${'<span class="mb"></span>'.repeat(b)}</div>`};
  const open=g.dk.filter(c=>c>=0),red=g.tr===1||g.tr===2;
- h+=`<div class="info"><div class="chip"><span class="bksm"></span> <b>${g.dk.length}</b></div><div class="chip tbx">козырь <b${red?' style="color:var(--red)"':''}>${SY[g.tr]}</b></div>${g.cm?'<div class="chip abx s0">🌀 <b>Хаос</b></div>':`<div class="chip abx s${g.su}">✨ <b>${SY[g.su]}</b> ${SN[g.su]}</div>`}${g.nd===104?'<div class="chip">2×52</div>':''}${g.opts&&g.opts.nb?'<div class="chip">🤝 подкидывают соседи</div>':''}${g.tm&&g.dl&&play?'<div class="chip">⏱ <b id="tmr"></b></div>':''}${g.dr<0?'<div class="chip">↺</div>':''}${g.lk?'<div class="chip">🔇×'+g.lk.r+'</div>':''}${g.bn?`<div class="chip">🚫 ${SY[g.bn.s]}×${g.bn.r}</div>`:''}</div>${open.length?`<div class="tag">Открыты в колоде: ${open.map(face).join('')}</div>`:''}${mi<0?'<div class="tag">👀 ты зритель</div>':''}${isHost?specHtml()+hostPanel():''}`;
+ h+=`<div class="info"><div class="chip"><span class="bksm"></span> <b>${g.dk.length}</b></div><div class="chip tbx">козырь <b${red?' style="color:var(--red)"':''}>${SY[g.tr]}</b></div>${g.cm?'<div class="chip abx s0">🌀 <b>Хаос</b></div>':`<div class="chip abx s${g.su}">✨ <b>${SY[g.su]}</b> ${SN[g.su]}</div>`}${g.nd===104?'<div class="chip">2×52</div>':''}${g.opts&&g.opts.nb?'<div class="chip nbchip">🤝 подкидывают соседи</div>':''}${g.tm&&g.dl&&play?'<div class="chip">⏱ <b id="tmr"></b></div>':''}${g.dr<0?'<div class="chip">↺</div>':''}${g.lk?'<div class="chip">🔇×'+g.lk.r+'</div>':''}${g.bn?`<div class="chip">🚫 ${SY[g.bn.s]}×${g.bn.r}</div>`:''}</div>${open.length?`<div class="tag">Открыты в колоде: ${open.map(face).join('')}</div>`:''}${mi<0?'<div class="tag">👀 ты зритель</div>':''}${isHost?specHtml()+hostPanel():''}`;
  h+=`<div class="plist">${g.nm.map((n,i)=>`<div class="pl ${i===g.at?'at':''} ${i===D?'df':''} ${g.out.includes(i)?'out':''}">${play&&i===g.at?'⚔️ ':play&&i===D?'🛡 ':play&&g.opts&&g.opts.nb&&canThrowIn(g,i)?'🤝 ':''}${g.bot&&g.bot[i]?'🤖 ':''}${esc(n)}${i===mi?' (ты)':''}${g.lv.includes(i)?' (вышел)':''}${(g.off||[]).includes(i)?' (нет связи)':''}${(g.ps||[]).includes(i)?' ✅':''}${isHost&&i!==mi&&!g.out.includes(i)&&!(g.bot&&g.bot[i])?`<button class="kick" onclick="kickPlayer(${i})">✕</button>`:''}<br><b>${g.h[i].length}</b> 🃏 · ⚡${fmt(g.ch[i])}${g.fr&&g.fr[i]>0?' 🧊'+g.fr[i]:''}${mini(i)}</div>`).join('')}</div>`;
  h+=`<div class="table">${g.tb.length?g.tb.map(([a,d,b])=>`<div class="pair">${card(a,g,'',false,true)}${d>=0?card(d,g,'',false,true):''}${b?`<span class="pill" style="position:absolute;top:-8px;right:-6px">${b>0?'+':''}${b}</span>`:''}</div>`).join(''):'<span class="tag">Стол пуст</span>'}</div>`;
  const oldTb=prevTb;prevTb=new Set(g.tb.flatMap(x=>[x[0],x[1]]));
+ if(g.ph!=='over')h+='<div class="dock">';
  if(g.ph==='over'){h+=`<h1>${g.lz>=0?'🤡 Дурак: '+esc(g.nm[g.lz]):'Ничья!'}</h1><p>${g.out.filter(i=>!g.lv.includes(i)).map((i,k)=>(k+1)+'. '+esc(g.nm[i])).join('<br>')}</p>`;if(isHost)h+=optsHtml('draw(lastG)')+(selMode===1?'':suBtns('draw(lastG)'))+tmBtns('draw(lastG)')+`<button class="b" onclick="start()">Новая партия</button>`}
  else{
   if(myAct)h+=`<div class="turn">🔔 ${mi===D?'Твой ход: отбивайся или бери':'Твой ход: атакуй'}</div>`;
@@ -654,11 +721,12 @@ function draw(g){
   if(g.fz&&mi===D&&!g.tk)h+='<div class="err mid">Отбиться нельзя, только взять!</div>'}
  const hand=mi>=0?g.h[mi].slice().sort((a,b)=>(JK(a)?99:a%52)-(JK(b)?99:b%52)||a-b):[],can=mi>=0&&play&&alive(mi,g)&&(mi===D?(!g.tk&&g.tb.length>0):(mi===g.at||(g.tb.length>0&&canThrowIn(g,mi))));
  selS=selS.filter(c=>hand.includes(c));const pc=selS.length?selS[0]:infoC;
- if(pc===null||pc===undefined)h+=`<div class="prev"><span class="tag">Нажми на карту, чтобы увидеть её способность</span></div>`;
+ if(pc===null||pc===undefined)h+=`<div class="prev slim"><span class="tag">Нажми на карту: покажу способность. Ещё раз, чтобы сыграть.</span></div>`;
  else{const ab=abOf(pc,g);h+=`<div class="prev">${card(pc,g)}<div><b>${cn(pc)}</b>${su(pc)===g.tr?' · козырь':''}<br>${ab?`<b>${esc(ab[1])}</b>: ${dsc(ab[0])}${ab[2]>0?' · стоит ⚡'+fmt(ab[2]):''}`:'обычная карта'}${can&&selS.length===1?`<br><button class="b" onclick="act(${pc})">Сыграть</button>`:can&&selS.length>1?`<br><b>Выбрано:</b> ${selS.map(cn).join(' ')}<br><button class="b" onclick="playSel()">Сыграть все (${selS.length})</button>`:''}${can&&selS.length===1&&mi===D&&canTrf(g,pc)?`<br><button class="b alt" onclick="trfSel()">Перевести</button>`:''}</div></div>`}
- if(mi>=0)h+=`<div class="hand">${hand.map(c=>card(c,g,selS.includes(c)?'sel':'',can,!can)).join('')}</div>`;
- $.innerHTML=h;window.scrollTo(0,y);try{animateNew(oldTb)}catch(e){}}
-applyBack();applyTheme();try{vol=parseFloat(localStorage.getItem('rz_vol')||'.8');music=localStorage.getItem('rz_music')==='1'}catch(e){}home();ownerCheck();setInterval(botTick,1100);setInterval(musicTick,3800);
+ if(mi>=0){const iw=typeof innerWidth==='number'?innerWidth:400,ih=typeof innerHeight==='number'?innerHeight:800,cw=Math.min(92,Math.max(54,Math.min(iw*.155,ih*.11))),av=Math.min(iw,1000)-24,cap=Math.max(1,1+Math.floor((av-cw)/(cw*.42))),rows=Math.max(1,Math.ceil(hand.length/cap)),per=Math.max(1,Math.ceil(hand.length/rows));for(let r=0;r<rows;r++)h+=`<div class="hand">${hand.slice(r*per,(r+1)*per).map(c=>card(c,g,selS.includes(c)?'sel':'',can,!can)).join('')}</div>`}
+ if(g.ph!=='over')h+='</div>';const hs0=document.querySelector('.hand'),sl0=hs0?hs0.scrollLeft:0;$.innerHTML=h;window.scrollTo(0,y);try{animateNew(oldTb)}catch(e){}try{fitHand();const nh=document.querySelector('.hand');if(nh&&sl0)nh.scrollLeft=sl0}catch(e){}}
+try{document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&!isHost&&everConn&&!kickedFlag&&hostConn&&hostConn.open===false){retry=0;connectHost()}});window.addEventListener('online',()=>{if(!isHost&&everConn&&!kickedFlag&&hostConn&&hostConn.open===false){retry=0;connectHost()}})}catch(e){}
+applyBack();applyTheme();try{fxLevel=parseInt(localStorage.getItem('rz_fx')||'1');calm=localStorage.getItem('rz_calm')==='1';vol=parseFloat(localStorage.getItem('rz_vol')||'.8');music=localStorage.getItem('rz_music')==='1'}catch(e){}applyCalm();home();ownerCheck();setInterval(botTick,1100);setInterval(musicTick,3800);
 document.addEventListener('pointerdown',()=>ac(),{once:true});
 setInterval(tickTimers,500);
 try{if(!localStorage.getItem('rz_help')){showHelp();localStorage.setItem('rz_help','1')}}catch(e){}
