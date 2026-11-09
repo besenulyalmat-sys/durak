@@ -700,9 +700,13 @@ const bgHtml=()=>{let t='none';try{t=localStorage.getItem('rz_bg')||'none'}catch
 function applyBack(){let k='color';try{k=localStorage.getItem('rz_back')||'color'}catch(e){}document.documentElement.style.setProperty('--back',backCss(k));return k}
 function setBack(k){try{localStorage.setItem('rz_back',k)}catch(e){}applyBack();home()}
 const backsHtml=()=>{const k=applyBack();return `<div class="tag">Рубашка карт</div><div class="backs">${BACKKEYS.map(x=>`<button class="bk ${k===x?'on':''}" onclick="setBack('${x}')" style="background-image:${backCss(x)}"></button>`).join('')}</div>`};
-const OWNER_HASH='198899b8eae4f52094e6f52fc0f5a389702e750e74a1772e2104d8d0828e8488';let isOwner=false,kickedFlag=false;const BAN=new Set();try{isOwner=localStorage.getItem('rz_owner')==='1'}catch(e){}
-function ownerCheck(){const h=location.hash.slice(1);if(!h.startsWith('owner='))return;const tok=h.slice(6);
- try{crypto.subtle.digest('SHA-256',new TextEncoder().encode(tok)).then(b=>{const hx=[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');if(hx===OWNER_HASH){isOwner=true;try{localStorage.setItem('rz_owner','1')}catch(e){}history.replaceState(null,'',location.pathname+location.search);err='';home()}else{err='Неверная ссылка хозяина.';home()}})}catch(e){err='Не удалось проверить ссылку хозяина (нужен https).';home()}}
+const OWNER_HASH='198899b8eae4f52094e6f52fc0f5a389702e750e74a1772e2104d8d0828e8488';let isOwner=false,kickedFlag=false;const BAN=new Set();
+const getOwnerFlag=()=>{try{if(localStorage.getItem('rz_owner')==='1')return true}catch(e){}try{return /(?:^|; )rz_owner=1/.test(document.cookie)}catch(e){}return false};
+function setOwnerFlag(on){try{if(on)localStorage.setItem('rz_owner','1');else localStorage.removeItem('rz_owner')}catch(e){}try{document.cookie='rz_owner='+(on?'1':'')+'; max-age='+(on?31536000:0)+'; path=/; SameSite=Lax'}catch(e){}}
+isOwner=getOwnerFlag();
+function checkOwnerToken(tok){try{crypto.subtle.digest('SHA-256',new TextEncoder().encode(tok)).then(b=>{const hx=[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');if(hx===OWNER_HASH){isOwner=true;setOwnerFlag(true);try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}err='';home()}else{err='Неверная ссылка хозяина.';home()}})}catch(e){err='Не удалось проверить ключ (нужен https).';home()}}
+function ownerCheck(){const h=location.hash.slice(1);if(!h.startsWith('owner='))return;checkOwnerToken(h.slice(6))}
+function ownerLogin(){const v=prompt('Вставь ссылку хозяина или ключ из неё');if(!v)return;const t=String(v).trim();checkOwnerToken(t.includes('owner=')?t.split('owner=').pop():t)}
 function kickConn(e){jlog('удалён',e.name);BAN.add(e.uid);ADMIT.delete(e.uid);if(S&&S.adm)delete S.adm[e.uid];try{e.c.send({t:'kicked'})}catch(x){}
  if(S&&e.idx>=0&&S.ph==='play'&&alive(e.idx)){if(S.opts&&S.opts.rb){toBot(e.idx);S.rp=S.rp.filter(x=>x!==e.idx);S.uid[e.idx]='kicked'+e.idx}else leave(e.idx)}
  const c=e.c;setTimeout(()=>{try{c.close()}catch(x){}},150);
@@ -710,7 +714,7 @@ function kickConn(e){jlog('удалён',e.name);BAN.add(e.uid);ADMIT.delete(e.u
 function kickEntry(i){const e=LB[i];if(!isHost||!e||!e.c||!confirm('Удалить игрока «'+e.name+'»?'))return;kickConn(e)}
 function kickPlayer(i){const e=LB.find(x=>x.idx===i&&x.c);if(!isHost||!e||!confirm('Удалить игрока «'+e.name+'»?'))return;kickConn(e)}
 const specHtml=()=>{const sp=LB.map((e,k)=>[e,k]).filter(([e])=>e.c&&e.idx<0);return sp.length?`<div class="tag">Зрители: ${sp.map(([e,k])=>esc(e.name)+` <button class="kick" onclick="kickEntry(${k})">✕</button>`).join(' · ')}</div>`:''};
-const VER='27.10 14:55 · журнал входов';function ownerOff(){try{localStorage.removeItem('rz_owner')}catch(e){}isOwner=false;home()}
+const VER='09.11 12:33 · вход хозяина';function ownerOff(){setOwnerFlag(false);isOwner=false;home()}
 let ROOMKEY='',KEYEXP=0,LOCKED=false;const ADMIT=new Map();
 let JLOG=[];try{JLOG=JSON.parse(localStorage.getItem('rz_jlog')||'[]')}catch(e){}
 function jlog(ev,name,why){JLOG.push({t:Date.now(),ev,n:String(name||'?').slice(0,16),w:why||''});if(JLOG.length>120)JLOG.shift();try{localStorage.setItem('rz_jlog',JSON.stringify(JLOG))}catch(e){}}
@@ -782,7 +786,7 @@ function joinPaste(){const el=document.getElementById('pl'),raw=String((el&&el.v
 function home(){const hc=cl();
  $.innerHTML=`<h1>🃏 Дурак: Старшая карта</h1><p class="tag">Дурак со способностями карт. 2–8 игроков.</p>${backsHtml()}${themeHtml()}${bgHtml()}
  <input id="nm" maxlength="16" placeholder="Твоё имя" value="${esc(myName)}">${hc?`<button class="b" onclick="join()">Войти в комнату ${esc(hc)}</button>${(()=>{const L=getLast();return L&&L.code===hc?'<p class="tag">✅ Твоё место в этой комнате сохранено: просто нажми «Войти».</p>':''})()}`:(getLast()?`<button class="b" onclick="rejoin()">↩ Вернуться в комнату ${esc(getLast().code)}</button>`:'')}${!hc?pasteHtml():''}
- ${isOwner?`<button class="b ${hc?'alt':''}" onclick="create()">Создать новую комнату</button><p class="tag">👑 Режим хозяина · <a href="#" onclick="ownerOff();return false">выйти</a></p>`:(hc?'':'<p class="tag">Чтобы сыграть, вставь ссылку-приглашение ниже или открой её в браузере.</p>')}<p class="err">${esc(err)}</p><button class="b alt" onclick="netTest()">🔧 Проверить соединение</button><p class="tag" style="opacity:.55;font-size:11px">версия ${VER}</p>`}
+ ${isOwner?`<button class="b ${hc?'alt':''}" onclick="create()">Создать новую комнату</button><p class="tag">👑 Режим хозяина · <a href="#" onclick="ownerOff();return false">выйти</a></p>`:(hc?'':'<p class="tag">Чтобы сыграть, вставь ссылку-приглашение ниже или открой её в браузере.</p>')}<p class="err">${esc(err)}</p><button class="b alt" onclick="netTest()">🔧 Проверить соединение</button>${isOwner?'':'<p class="tag"><a href="#" onclick="ownerLogin();return false">Войти как хозяин</a></p>'}<p class="tag" style="opacity:.55;font-size:11px">версия ${VER}</p>`}
 function draw(g){
  const mi=g?g.you:-1;myIdx=mi;let h='';
  if(!g){
